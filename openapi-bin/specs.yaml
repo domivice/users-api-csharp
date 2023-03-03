@@ -1,0 +1,913 @@
+---
+openapi: 3.0.2
+info:
+  title: Users API
+  version: 1.0.0
+  description: The users API
+  contact:
+    name: Domivice Development Team
+    url: https://development.domivice.com
+paths:
+  /v1/users/{userId}:
+    get:
+      tags:
+        - Users
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: Response when a user object is returned
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Get User
+    delete:
+      tags:
+        - Users
+      responses:
+        "204":
+          description: Response when the user has been deleted
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Delete User
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      tags:
+        - Users
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: 'User update was successful '
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Update User
+    parameters:
+      - name: userId
+        description: The user id
+        schema:
+          type: string
+        in: path
+        required: true
+  /v1/users:
+    get:
+      tags:
+        - Users
+      parameters:
+        - name: search
+          description: "A search term to search users on firstName, lastName, email\
+          \ and phoneNumbers."
+          schema:
+            type: string
+          in: query
+          required: false
+        - name: status
+          description: The status to filter users by status
+          schema:
+            type: string
+          in: query
+          required: false
+        - name: page
+          description: The page requested. Page parameter can only be a positive integer
+            greater than 0.
+          schema:
+            type: integer
+          in: query
+          required: false
+        - name: pageSize
+          description: The requested page size. Page size can only be between 1 and
+            100
+          schema:
+            type: integer
+          in: query
+          required: false
+        - name: sort
+          description: "The result sorting. field1[:asc|desc][,field2[:asc|desc]] e.g.\
+          \ firstName:desc,email:asc"
+          schema:
+            type: string
+          in: query
+          required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+          description: When a list of 0 or more users are returned
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      summary: List Users
+  /v1/users/{userId}/addresses:
+    get:
+      tags:
+        - Addresses
+      parameters:
+        - name: type
+          description: Filter by the address type
+          schema:
+            enum:
+              - Primary
+              - Secondary
+            type: string
+          in: query
+          required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressList'
+          description: Response when a list of 0 or more addresses is returned
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      operationId: list_addresses
+      summary: List addresses
+    post:
+      requestBody:
+        description: The json representation of new address
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressCreate'
+        required: true
+      tags:
+        - Addresses
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+          description: Response when new address is created
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      operationId: create_address
+      summary: Create address
+    parameters:
+      - name: userId
+        description: The string guid representation of the user id
+        schema:
+          type: string
+        in: path
+        required: true
+  /v1/users/{userId}/addresses/{addressId}:
+    get:
+      tags:
+        - Addresses
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+          description: Response when an address is returned
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      operationId: get_address
+      summary: Get Address
+    delete:
+      tags:
+        - Addresses
+      responses:
+        "204":
+          description: Response when the address was deleted successfully
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      operationId: delete_address
+      summary: Delete Address
+    patch:
+      requestBody:
+        description: The json representation of the address update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressUpdate'
+        required: true
+      tags:
+        - Addresses
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+          description: Response when the address was updated successfully
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      operationId: update_address
+      summary: Patch address
+    parameters:
+      - name: userId
+        description: The string guid representing the user id
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: addressId
+        description: The string guid representing the address id
+        schema:
+          type: string
+        in: path
+        required: true
+  /v1/users/{userId}/business-hours:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessHoursCreate'
+        required: true
+      tags:
+        - Business Hours
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessHours'
+          description: Response when the business hours have been created successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      summary: Create Business Hours
+    parameters:
+      - name: userId
+        description: The string guid representation of the user id
+        schema:
+          type: string
+        in: path
+        required: true
+  /v1/users/{userId}/business-hours/{businessHourId}:
+    get:
+      tags:
+        - Business Hours
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessHours'
+          description: Response when an business hours object is returned
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Get Business Hours
+    delete:
+      tags:
+        - Business Hours
+      responses:
+        "204":
+          description: Response when the business hours is deleted
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Delete Business Hours
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessHoursUpdate'
+        required: true
+      tags:
+        - Business Hours
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessHours'
+          description: Response when the business hours have been successfully updated.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Patch Business Hours
+    parameters:
+      - name: userId
+        description: The string guid representation of the user id
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: businessHourId
+        description: The string guid representation of the business hour id
+        schema:
+          type: string
+        in: path
+        required: true
+  /v1/users/{userId}/days-off:
+    get:
+      tags:
+        - Days Off
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaysOffList'
+          description: Response when a list of 0 or more days off is returned
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      summary: List Days Off
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DayOffCreate'
+        required: true
+      tags:
+        - Days Off
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DayOff'
+          description: Response when a day off is created successfully
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      summary: Create Day Off
+    parameters:
+      - name: userId
+        description: The string guid representing the user id
+        schema:
+          type: string
+        in: path
+        required: true
+  /v1/users/{userId}/days-off/{dayOffId}:
+    get:
+      tags:
+        - Days Off
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DayOff'
+          description: The response when a day off object is returned
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Get Day Off
+    delete:
+      tags:
+        - Days Off
+      responses:
+        "204":
+          description: Response when the day off we deleted.
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Delete Day Off
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DayOffUpdate'
+        required: true
+      tags:
+        - Days Off
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DayOff'
+          description: Response when the day off was updated successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+      summary: Patch Day Off
+    parameters:
+      - name: userId
+        description: The string guid representing the user id
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: dayOffId
+        description: The day off id
+        schema:
+          type: string
+        in: path
+        required: true
+components:
+  schemas:
+    Error:
+      description: ""
+      required:
+        - type
+        - title
+        - detail
+        - instance
+      type: object
+      properties:
+        detail:
+          description: A human-readable explanation of the error
+          type: string
+        instance:
+          description: A URI that identifies the specific occurrence of the error
+          type: string
+        status:
+          description: The HTTP response code
+          type: string
+        title:
+          description: "A brief, human-readable message about the error"
+          type: string
+        type:
+          description: A URI identifier that categorizes the error
+          type: string
+        errors:
+          description: The validation errors
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValuePair'
+        extensions:
+          description: The error extensions
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValuePair'
+    KeyValuePair:
+      description: Carries key values pair
+      type: object
+    Address:
+      description: ""
+      required:
+        - userId
+        - addressLine1
+        - city
+        - country
+        - postalCode
+        - state
+        - id
+        - type
+      type: object
+      properties:
+        userId:
+          description: The user id
+          type: string
+        addressLine1:
+          description: The address line 1
+          type: string
+        addressLine2:
+          description: The address line 2
+          type: string
+        addressLine3:
+          description: The address line 3
+          type: string
+        city:
+          description: The city
+          type: string
+        country:
+          description: The country
+          type: string
+        postalCode:
+          description: The postal code
+          type: string
+        state:
+          description: 'The state or province '
+          type: string
+        id:
+          description: The address id
+          type: string
+        type:
+          description: The address type. Newly created addresses should default to
+            secondary
+          enum:
+            - Primary
+            - Secondary
+          type: string
+    User:
+      description: Carries information about the user
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+        - status
+        - phoneNumber
+      type: object
+      properties:
+        id:
+          description: 'The string guid representing the user id '
+          type: string
+        email:
+          description: The user email
+          type: string
+        firstName:
+          description: The user first name
+          type: string
+        lastName:
+          description: The user last name
+          type: string
+        status:
+          description: The user status
+          type: string
+        phoneNumber:
+          description: The user phone number
+          type: string
+    UserList:
+      description: Carries a paginated list of users
+      required:
+        - data
+        - totalItemsCount
+        - pageCount
+      type: object
+      properties:
+        data:
+          description: The user list
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        nextPage:
+          description: The URL to access the next page
+          type: string
+        pageCount:
+          description: The page count
+          type: integer
+        previousPage:
+          description: The URL to access the previous page
+          type: string
+        totalItemsCount:
+          description: The total items count
+          type: integer
+    AddressCreate:
+      description: ""
+      required:
+        - addressLine1
+        - city
+        - country
+        - postalCode
+        - state
+        - type
+      type: object
+      properties:
+        addressLine1:
+          description: The address line 1
+          type: string
+        addressLine2:
+          description: The address line 2
+          type: string
+        addressLine3:
+          description: The address line 3
+          type: string
+        city:
+          description: The city
+          type: string
+        country:
+          description: The country
+          type: string
+        postalCode:
+          description: The postal code
+          type: string
+        state:
+          description: 'The state or province '
+          type: string
+        type:
+          description: The address type. Newly created addresses should default to
+            secondary
+          type: string
+      example:
+        addressLine1: some text
+        addressLine2: some text
+        addressLine3: some text
+        city: some text
+        country: some text
+        postalCode: some text
+        state: some text
+        type: primary
+    AddressUpdate:
+      description: ""
+      type: object
+      properties:
+        addressLine1:
+          description: The address line 1
+          type: string
+        addressLine2:
+          description: The address line 2
+          type: string
+        addressLine3:
+          description: The address line 3
+          type: string
+        city:
+          description: The city
+          type: string
+        country:
+          description: The country
+          type: string
+        postalCode:
+          description: The postal code
+          type: string
+        state:
+          description: 'The state or province '
+          type: string
+        type:
+          description: The address type. Newly created addresses should default to
+            secondary
+          type: string
+    AddressList:
+      description: Carries a paginated list of addresses
+      required:
+        - data
+        - totalItemsCount
+        - pageCount
+      type: object
+      properties:
+        data:
+          description: The address list
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        nextPage:
+          description: The URL to access the next page
+          type: string
+        pageCount:
+          description: The page count
+          type: integer
+        previousPage:
+          description: The URL to access the previous page
+          type: string
+        totalItemsCount:
+          description: The total items count
+          type: integer
+    BusinessHours:
+      description: Carries information about individual or agency openning hours
+      required:
+        - validFrom
+        - validThrough
+        - id
+        - userId
+        - timeSlots
+      type: object
+      properties:
+        validFrom:
+          format: date-time
+          description: The date when the item becomes valid.
+          type: string
+        validThrough:
+          format: date-time
+          description: The date after when the item is not valid.
+          type: string
+        id:
+          description: The opening hours record id
+          type: string
+        userId:
+          description: The user id
+          type: string
+        timeSlots:
+          description: The time slots of the business hours for a given week day
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+    DayOff:
+      description: Carries information about a day off
+      required:
+        - id
+        - userId
+        - startDate
+        - endDate
+      type: object
+      properties:
+        id:
+          description: The string guid representation of the day off id
+          type: string
+        userId:
+          description: The day off user id
+          type: string
+        startDate:
+          format: date-time
+          description: The day off start date
+          type: string
+        endDate:
+          format: date-time
+          description: The day off end date
+          type: string
+    DayOffCreate:
+      description: Carries information about a day off
+      required:
+        - startDate
+        - endDate
+      type: object
+      properties:
+        startDate:
+          format: date-time
+          description: The day off start date
+          type: string
+        endDate:
+          format: date-time
+          description: The day off end date
+          type: string
+    DayOffUpdate:
+      description: Carries information about a day off
+      required: []
+      type: object
+      properties:
+        startDate:
+          format: date-time
+          description: The day off start date
+          type: string
+        endDate:
+          format: date-time
+          description: The day off end date
+          type: string
+    DaysOffList:
+      description: Carries a paginated list of users
+      required:
+        - data
+        - totalItemsCount
+        - pageCount
+      type: object
+      properties:
+        data:
+          description: The days off list
+          type: array
+          items:
+            $ref: '#/components/schemas/DayOff'
+        nextPage:
+          description: The URL to access the next page
+          type: string
+        pageCount:
+          description: The page count
+          type: integer
+        previousPage:
+          description: The URL to access the previous page
+          type: string
+        totalItemsCount:
+          description: The total items count
+          type: integer
+    TimeSlot:
+      description: Carries information about open and closing time
+      required:
+        - startTime
+        - endTime
+        - dayOfWeek
+      type: object
+      properties:
+        endTime:
+          format: date-time
+          description: The closing time
+          type: string
+        startTime:
+          format: date-time
+          description: The opening time
+          type: string
+        dayOfWeek:
+          description: The day of week number
+          enum:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+            - publicHoliday
+          type: string
+    BusinessHoursCreate:
+      description: Carries information about individual or agency openning hours
+      required:
+        - validFrom
+        - validThrough
+        - timeSlots
+      type: object
+      properties:
+        validFrom:
+          format: date-time
+          description: The date when the item becomes valid.
+          type: string
+        validThrough:
+          format: date-time
+          description: The date after when the item is not valid.
+          type: string
+        timeSlots:
+          description: The time slots of the business hours for a given week day
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+    BusinessHoursUpdate:
+      description: Carries information about individual or agency openning hours
+      required: []
+      type: object
+      properties:
+        validFrom:
+          format: date-time
+          description: The date when the item becomes valid.
+          type: string
+        validThrough:
+          format: date-time
+          description: The date after when the item is not valid.
+          type: string
+        timeSlots:
+          description: The time slots of the business hours for a given week day
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+    UserUpdate:
+      description: Carries information about the user
+      required: []
+      type: object
+      properties:
+        firstName:
+          description: The user first name
+          type: string
+        lastName:
+          description: The user last name
+          type: string
+        phoneNumber:
+          description: The user phone number
+          type: string
+        phoneCountryCode:
+          description: The user phone country code
+          type: string
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: There was an error with the request
+    Forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: User is not allowed to perform action
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The resource was not found
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: User is not authenticated
+tags:
+  - name: Authentication
+    description: ""
+  - name: Users
+    description: ""
+  - name: Addresses
+    description: ""
+  - name: Business Hours
+    description: ""
+  - name: Days Off
+    description: ""

@@ -1,0 +1,7 @@
+.idea
+**/**/bin
+**/**/obj
+mssql
+obj
+*.user
+*.jwk

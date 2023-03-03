@@ -1,0 +1,1913 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "contact": {
+            "name": "Domivice Development Team",
+            "url": "https://development.domivice.com"
+        },
+        "description": "The users API",
+        "title": "Users API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "tags": [
+        {
+            "description": "",
+            "name": "Authentication"
+        }, {
+            "description": "",
+            "name": "Users"
+        }, {
+            "description": "",
+            "name": "Addresses"
+        }, {
+            "description": "",
+            "name": "Business Hours"
+        }, {
+            "description": "",
+            "name": "Days Off"
+        }
+    ],
+    "paths": {
+        "/v1/users/{userId}": {
+            "delete": {
+                "parameters": [
+                    {
+                        "description": "The user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Response when the user has been deleted"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not allowed to perform action"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Delete User",
+                "tags": ["Users"]
+            },
+            "get": {
+                "parameters": [
+                    {
+                        "description": "The user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        },
+                        "description": "Response when a user object is returned"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Get User",
+                "tags": ["Users"]
+            },
+            "patch": {
+                "parameters": [
+                    {
+                        "description": "The user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        },
+                        "description": "User update was successful "
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "There was an error with the request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not allowed to perform action"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Update User",
+                "tags": ["Users"]
+            }
+        },
+        "/v1/users": {
+            "get": {
+                "parameters": [
+                    {
+                        "description": "A search term to search users on firstName, lastName, email and phoneNumbers.",
+                        "explode": true,
+                        "in": "query",
+                        "name": "search",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form"
+                    }, {
+                        "description": "The status to filter users by status",
+                        "explode": true,
+                        "in": "query",
+                        "name": "status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form"
+                    }, {
+                        "description":
+                            "The page requested. Page parameter can only be a positive integer greater than 0.",
+                        "explode": true,
+                        "in": "query",
+                        "name": "page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "form"
+                    }, {
+                        "description": "The requested page size. Page size can only be between 1 and 100",
+                        "explode": true,
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "style": "form"
+                    }, {
+                        "description":
+                            "The result sorting. field1[:asc|desc][,field2[:asc|desc]] e.g. firstName:desc,email:asc",
+                        "explode": true,
+                        "in": "query",
+                        "name": "sort",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserList"
+                                }
+                            }
+                        },
+                        "description": "When a list of 0 or more users are returned"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    }
+                },
+                "summary": "List Users",
+                "tags": ["Users"]
+            }
+        },
+        "/v1/users/{userId}/addresses": {
+            "get": {
+                "operationId": "list_addresses",
+                "parameters": [
+                    {
+                        "description": "The string guid representation of the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "Filter by the address type",
+                        "explode": true,
+                        "in": "query",
+                        "name": "type",
+                        "required": false,
+                        "schema": {
+                            "enum": ["Primary", "Secondary"],
+                            "type": "string"
+                        },
+                        "style": "form"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddressList"
+                                }
+                            }
+                        },
+                        "description": "Response when a list of 0 or more addresses is returned"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    }
+                },
+                "summary": "List addresses",
+                "tags": ["Addresses"]
+            },
+            "post": {
+                "operationId": "create_address",
+                "parameters": [
+                    {
+                        "description": "The string guid representation of the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddressCreate"
+                            }
+                        }
+                    },
+                    "description": "The json representation of new address",
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Address"
+                                }
+                            }
+                        },
+                        "description": "Response when new address is created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "There was an error with the request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    }
+                },
+                "summary": "Create address",
+                "tags": ["Addresses"]
+            }
+        },
+        "/v1/users/{userId}/addresses/{addressId}": {
+            "delete": {
+                "operationId": "delete_address",
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The string guid representing the address id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "addressId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Response when the address was deleted successfully"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not allowed to perform action"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Delete Address",
+                "tags": ["Addresses"]
+            },
+            "get": {
+                "operationId": "get_address",
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The string guid representing the address id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "addressId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Address"
+                                }
+                            }
+                        },
+                        "description": "Response when an address is returned"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Get Address",
+                "tags": ["Addresses"]
+            },
+            "patch": {
+                "operationId": "update_address",
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The string guid representing the address id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "addressId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddressUpdate"
+                            }
+                        }
+                    },
+                    "description": "The json representation of the address update",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Address"
+                                }
+                            }
+                        },
+                        "description": "Response when the address was updated successfully"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "There was an error with the request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not allowed to perform action"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Patch address",
+                "tags": ["Addresses"]
+            }
+        },
+        "/v1/users/{userId}/business-hours": {
+            "post": {
+                "parameters": [
+                    {
+                        "description": "The string guid representation of the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BusinessHoursCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BusinessHours"
+                                }
+                            }
+                        },
+                        "description": "Response when the business hours have been created successfully."
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "There was an error with the request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    }
+                },
+                "summary": "Create Business Hours",
+                "tags": ["Business Hours"]
+            }
+        },
+        "/v1/users/{userId}/business-hours/{businessHourId}": {
+            "delete": {
+                "parameters": [
+                    {
+                        "description": "The string guid representation of the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The string guid representation of the business hour id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "businessHourId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Response when the business hours is deleted"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not allowed to perform action"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Delete Business Hours",
+                "tags": ["Business Hours"]
+            },
+            "get": {
+                "parameters": [
+                    {
+                        "description": "The string guid representation of the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The string guid representation of the business hour id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "businessHourId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BusinessHours"
+                                }
+                            }
+                        },
+                        "description": "Response when an business hours object is returned"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Get Business Hours",
+                "tags": ["Business Hours"]
+            },
+            "patch": {
+                "parameters": [
+                    {
+                        "description": "The string guid representation of the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The string guid representation of the business hour id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "businessHourId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BusinessHoursUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BusinessHours"
+                                }
+                            }
+                        },
+                        "description": "Response when the business hours have been successfully updated."
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "There was an error with the request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not allowed to perform action"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Patch Business Hours",
+                "tags": ["Business Hours"]
+            }
+        },
+        "/v1/users/{userId}/days-off": {
+            "get": {
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DaysOffList"
+                                }
+                            }
+                        },
+                        "description": "Response when a list of 0 or more days off is returned"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    }
+                },
+                "summary": "List Days Off",
+                "tags": ["Days Off"]
+            },
+            "post": {
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DayOffCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DayOff"
+                                }
+                            }
+                        },
+                        "description": "Response when a day off is created successfully"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "There was an error with the request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    }
+                },
+                "summary": "Create Day Off",
+                "tags": ["Days Off"]
+            }
+        },
+        "/v1/users/{userId}/days-off/{dayOffId}": {
+            "delete": {
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The day off id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "dayOffId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Response when the day off we deleted."
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not allowed to perform action"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Delete Day Off",
+                "tags": ["Days Off"]
+            },
+            "get": {
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The day off id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "dayOffId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DayOff"
+                                }
+                            }
+                        },
+                        "description": "The response when a day off object is returned"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Get Day Off",
+                "tags": ["Days Off"]
+            },
+            "patch": {
+                "parameters": [
+                    {
+                        "description": "The string guid representing the user id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }, {
+                        "description": "The day off id",
+                        "explode": false,
+                        "in": "path",
+                        "name": "dayOffId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DayOffUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DayOff"
+                                }
+                            }
+                        },
+                        "description": "Response when the day off was updated successfully."
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "There was an error with the request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "User is not authenticated"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "description": "The resource was not found"
+                    }
+                },
+                "summary": "Patch Day Off",
+                "tags": ["Days Off"]
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "BadRequest": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                },
+                "description": "There was an error with the request"
+            },
+            "Forbidden": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                },
+                "description": "User is not allowed to perform action"
+            },
+            "NotFound": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                },
+                "description": "The resource was not found"
+            },
+            "Unauthorized": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                },
+                "description": "User is not authenticated"
+            }
+        },
+        "schemas": {
+            "Error": {
+                "description": "",
+                "properties": {
+                    "detail": {
+                        "description": "A human-readable explanation of the error",
+                        "type": "string"
+                    },
+                    "instance": {
+                        "description": "A URI that identifies the specific occurrence of the error",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The HTTP response code",
+                        "type": "string"
+                    },
+                    "title": {
+                        "description": "A brief, human-readable message about the error",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "A URI identifier that categorizes the error",
+                        "type": "string"
+                    },
+                    "errors": {
+                        "description": "The validation errors",
+                        "items": {
+                            "$ref": "#/components/schemas/KeyValuePair"
+                        },
+                        "type": "array"
+                    },
+                    "extensions": {
+                        "description": "The error extensions",
+                        "items": {
+                            "$ref": "#/components/schemas/KeyValuePair"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": ["detail", "instance", "title", "type"],
+                "type": "object"
+            },
+            "KeyValuePair": {
+                "description": "Carries key values pair",
+                "type": "object"
+            },
+            "Address": {
+                "description": "",
+                "example": {
+                    "country": "country",
+                    "city": "city",
+                    "postalCode": "postalCode",
+                    "addressLine1": "addressLine1",
+                    "addressLine2": "addressLine2",
+                    "addressLine3": "addressLine3",
+                    "state": "state",
+                    "id": "id",
+                    "type": "Primary",
+                    "userId": "userId"
+                },
+                "properties": {
+                    "userId": {
+                        "description": "The user id",
+                        "type": "string"
+                    },
+                    "addressLine1": {
+                        "description": "The address line 1",
+                        "type": "string"
+                    },
+                    "addressLine2": {
+                        "description": "The address line 2",
+                        "type": "string"
+                    },
+                    "addressLine3": {
+                        "description": "The address line 3",
+                        "type": "string"
+                    },
+                    "city": {
+                        "description": "The city",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "The country",
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "description": "The postal code",
+                        "type": "string"
+                    },
+                    "state": {
+                        "description": "The state or province ",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "The address id",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "The address type. Newly created addresses should default to secondary",
+                        "enum": ["Primary", "Secondary"],
+                        "type": "string"
+                    }
+                },
+                "required": ["addressLine1", "city", "country", "id", "postalCode", "state", "type", "userId"],
+                "type": "object"
+            },
+            "User": {
+                "description": "Carries information about the user",
+                "example": {
+                    "firstName": "firstName",
+                    "lastName": "lastName",
+                    "phoneNumber": "phoneNumber",
+                    "id": "id",
+                    "email": "email",
+                    "status": "status"
+                },
+                "properties": {
+                    "id": {
+                        "description": "The string guid representing the user id ",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The user email",
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "description": "The user first name",
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "description": "The user last name",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The user status",
+                        "type": "string"
+                    },
+                    "phoneNumber": {
+                        "description": "The user phone number",
+                        "type": "string"
+                    }
+                },
+                "required": ["email", "firstName", "id", "lastName", "phoneNumber", "status"],
+                "type": "object"
+            },
+            "UserList": {
+                "description": "Carries a paginated list of users",
+                "example": {
+                    "totalItemsCount": 6,
+                    "pageCount": 0,
+                    "previousPage": "previousPage",
+                    "data": [
+                        {
+                            "firstName": "firstName",
+                            "lastName": "lastName",
+                            "phoneNumber": "phoneNumber",
+                            "id": "id",
+                            "email": "email",
+                            "status": "status"
+                        }, {
+                            "firstName": "firstName",
+                            "lastName": "lastName",
+                            "phoneNumber": "phoneNumber",
+                            "id": "id",
+                            "email": "email",
+                            "status": "status"
+                        }
+                    ],
+                    "nextPage": "nextPage"
+                },
+                "properties": {
+                    "data": {
+                        "description": "The user list",
+                        "items": {
+                            "$ref": "#/components/schemas/User"
+                        },
+                        "type": "array"
+                    },
+                    "nextPage": {
+                        "description": "The URL to access the next page",
+                        "type": "string"
+                    },
+                    "pageCount": {
+                        "description": "The page count",
+                        "type": "integer"
+                    },
+                    "previousPage": {
+                        "description": "The URL to access the previous page",
+                        "type": "string"
+                    },
+                    "totalItemsCount": {
+                        "description": "The total items count",
+                        "type": "integer"
+                    }
+                },
+                "required": ["data", "pageCount", "totalItemsCount"],
+                "type": "object"
+            },
+            "AddressCreate": {
+                "description": "",
+                "example": {
+                    "addressLine1": "some text",
+                    "addressLine2": "some text",
+                    "addressLine3": "some text",
+                    "city": "some text",
+                    "country": "some text",
+                    "postalCode": "some text",
+                    "state": "some text",
+                    "type": "primary"
+                },
+                "properties": {
+                    "addressLine1": {
+                        "description": "The address line 1",
+                        "type": "string"
+                    },
+                    "addressLine2": {
+                        "description": "The address line 2",
+                        "type": "string"
+                    },
+                    "addressLine3": {
+                        "description": "The address line 3",
+                        "type": "string"
+                    },
+                    "city": {
+                        "description": "The city",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "The country",
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "description": "The postal code",
+                        "type": "string"
+                    },
+                    "state": {
+                        "description": "The state or province ",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "The address type. Newly created addresses should default to secondary",
+                        "type": "string"
+                    }
+                },
+                "required": ["addressLine1", "city", "country", "postalCode", "state", "type"],
+                "type": "object"
+            },
+            "AddressUpdate": {
+                "description": "",
+                "example": {
+                    "country": "country",
+                    "city": "city",
+                    "postalCode": "postalCode",
+                    "addressLine1": "addressLine1",
+                    "addressLine2": "addressLine2",
+                    "addressLine3": "addressLine3",
+                    "state": "state",
+                    "type": "type"
+                },
+                "properties": {
+                    "addressLine1": {
+                        "description": "The address line 1",
+                        "type": "string"
+                    },
+                    "addressLine2": {
+                        "description": "The address line 2",
+                        "type": "string"
+                    },
+                    "addressLine3": {
+                        "description": "The address line 3",
+                        "type": "string"
+                    },
+                    "city": {
+                        "description": "The city",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "The country",
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "description": "The postal code",
+                        "type": "string"
+                    },
+                    "state": {
+                        "description": "The state or province ",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "The address type. Newly created addresses should default to secondary",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AddressList": {
+                "description": "Carries a paginated list of addresses",
+                "example": {
+                    "totalItemsCount": 6,
+                    "pageCount": 0,
+                    "previousPage": "previousPage",
+                    "data": [
+                        {
+                            "country": "country",
+                            "city": "city",
+                            "postalCode": "postalCode",
+                            "addressLine1": "addressLine1",
+                            "addressLine2": "addressLine2",
+                            "addressLine3": "addressLine3",
+                            "state": "state",
+                            "id": "id",
+                            "type": "Primary",
+                            "userId": "userId"
+                        }, {
+                            "country": "country",
+                            "city": "city",
+                            "postalCode": "postalCode",
+                            "addressLine1": "addressLine1",
+                            "addressLine2": "addressLine2",
+                            "addressLine3": "addressLine3",
+                            "state": "state",
+                            "id": "id",
+                            "type": "Primary",
+                            "userId": "userId"
+                        }
+                    ],
+                    "nextPage": "nextPage"
+                },
+                "properties": {
+                    "data": {
+                        "description": "The address list",
+                        "items": {
+                            "$ref": "#/components/schemas/Address"
+                        },
+                        "type": "array"
+                    },
+                    "nextPage": {
+                        "description": "The URL to access the next page",
+                        "type": "string"
+                    },
+                    "pageCount": {
+                        "description": "The page count",
+                        "type": "integer"
+                    },
+                    "previousPage": {
+                        "description": "The URL to access the previous page",
+                        "type": "string"
+                    },
+                    "totalItemsCount": {
+                        "description": "The total items count",
+                        "type": "integer"
+                    }
+                },
+                "required": ["data", "pageCount", "totalItemsCount"],
+                "type": "object"
+            },
+            "BusinessHours": {
+                "description": "Carries information about individual or agency openning hours",
+                "example": {
+                    "validThrough": "2000-01-23T04:56:07.000+00:00",
+                    "timeSlots": [
+                        {
+                            "dayOfWeek": "monday",
+                            "startTime": "2000-01-23T04:56:07.000+00:00",
+                            "endTime": "2000-01-23T04:56:07.000+00:00"
+                        }, {
+                            "dayOfWeek": "monday",
+                            "startTime": "2000-01-23T04:56:07.000+00:00",
+                            "endTime": "2000-01-23T04:56:07.000+00:00"
+                        }
+                    ],
+                    "validFrom": "2000-01-23T04:56:07.000+00:00",
+                    "id": "id",
+                    "userId": "userId"
+                },
+                "properties": {
+                    "validFrom": {
+                        "description": "The date when the item becomes valid.",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "validThrough": {
+                        "description": "The date after when the item is not valid.",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "The opening hours record id",
+                        "type": "string"
+                    },
+                    "userId": {
+                        "description": "The user id",
+                        "type": "string"
+                    },
+                    "timeSlots": {
+                        "description": "The time slots of the business hours for a given week day",
+                        "items": {
+                            "$ref": "#/components/schemas/TimeSlot"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": ["id", "timeSlots", "userId", "validFrom", "validThrough"],
+                "type": "object"
+            },
+            "DayOff": {
+                "description": "Carries information about a day off",
+                "example": {
+                    "endDate": "2000-01-23T04:56:07.000+00:00",
+                    "id": "id",
+                    "userId": "userId",
+                    "startDate": "2000-01-23T04:56:07.000+00:00"
+                },
+                "properties": {
+                    "id": {
+                        "description": "The string guid representation of the day off id",
+                        "type": "string"
+                    },
+                    "userId": {
+                        "description": "The day off user id",
+                        "type": "string"
+                    },
+                    "startDate": {
+                        "description": "The day off start date",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "endDate": {
+                        "description": "The day off end date",
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": ["endDate", "id", "startDate", "userId"],
+                "type": "object"
+            },
+            "DayOffCreate": {
+                "description": "Carries information about a day off",
+                "example": {
+                    "endDate": "2000-01-23T04:56:07.000+00:00",
+                    "startDate": "2000-01-23T04:56:07.000+00:00"
+                },
+                "properties": {
+                    "startDate": {
+                        "description": "The day off start date",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "endDate": {
+                        "description": "The day off end date",
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": ["endDate", "startDate"],
+                "type": "object"
+            },
+            "DayOffUpdate": {
+                "description": "Carries information about a day off",
+                "example": {
+                    "endDate": "2000-01-23T04:56:07.000+00:00",
+                    "startDate": "2000-01-23T04:56:07.000+00:00"
+                },
+                "properties": {
+                    "startDate": {
+                        "description": "The day off start date",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "endDate": {
+                        "description": "The day off end date",
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "DaysOffList": {
+                "description": "Carries a paginated list of users",
+                "example": {
+                    "totalItemsCount": 6,
+                    "pageCount": 0,
+                    "previousPage": "previousPage",
+                    "data": [
+                        {
+                            "endDate": "2000-01-23T04:56:07.000+00:00",
+                            "id": "id",
+                            "userId": "userId",
+                            "startDate": "2000-01-23T04:56:07.000+00:00"
+                        }, {
+                            "endDate": "2000-01-23T04:56:07.000+00:00",
+                            "id": "id",
+                            "userId": "userId",
+                            "startDate": "2000-01-23T04:56:07.000+00:00"
+                        }
+                    ],
+                    "nextPage": "nextPage"
+                },
+                "properties": {
+                    "data": {
+                        "description": "The days off list",
+                        "items": {
+                            "$ref": "#/components/schemas/DayOff"
+                        },
+                        "type": "array"
+                    },
+                    "nextPage": {
+                        "description": "The URL to access the next page",
+                        "type": "string"
+                    },
+                    "pageCount": {
+                        "description": "The page count",
+                        "type": "integer"
+                    },
+                    "previousPage": {
+                        "description": "The URL to access the previous page",
+                        "type": "string"
+                    },
+                    "totalItemsCount": {
+                        "description": "The total items count",
+                        "type": "integer"
+                    }
+                },
+                "required": ["data", "pageCount", "totalItemsCount"],
+                "type": "object"
+            },
+            "TimeSlot": {
+                "description": "Carries information about open and closing time",
+                "example": {
+                    "dayOfWeek": "monday",
+                    "startTime": "2000-01-23T04:56:07.000+00:00",
+                    "endTime": "2000-01-23T04:56:07.000+00:00"
+                },
+                "properties": {
+                    "endTime": {
+                        "description": "The closing time",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "startTime": {
+                        "description": "The opening time",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "dayOfWeek": {
+                        "description": "The day of week number",
+                        "enum": [
+                            "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+                            "publicHoliday"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "required": ["dayOfWeek", "endTime", "startTime"],
+                "type": "object"
+            },
+            "BusinessHoursCreate": {
+                "description": "Carries information about individual or agency openning hours",
+                "example": {
+                    "validThrough": "2000-01-23T04:56:07.000+00:00",
+                    "timeSlots": [
+                        {
+                            "dayOfWeek": "monday",
+                            "startTime": "2000-01-23T04:56:07.000+00:00",
+                            "endTime": "2000-01-23T04:56:07.000+00:00"
+                        }, {
+                            "dayOfWeek": "monday",
+                            "startTime": "2000-01-23T04:56:07.000+00:00",
+                            "endTime": "2000-01-23T04:56:07.000+00:00"
+                        }
+                    ],
+                    "validFrom": "2000-01-23T04:56:07.000+00:00"
+                },
+                "properties": {
+                    "validFrom": {
+                        "description": "The date when the item becomes valid.",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "validThrough": {
+                        "description": "The date after when the item is not valid.",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "timeSlots": {
+                        "description": "The time slots of the business hours for a given week day",
+                        "items": {
+                            "$ref": "#/components/schemas/TimeSlot"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": ["timeSlots", "validFrom", "validThrough"],
+                "type": "object"
+            },
+            "BusinessHoursUpdate": {
+                "description": "Carries information about individual or agency openning hours",
+                "example": {
+                    "validThrough": "2000-01-23T04:56:07.000+00:00",
+                    "timeSlots": [
+                        {
+                            "dayOfWeek": "monday",
+                            "startTime": "2000-01-23T04:56:07.000+00:00",
+                            "endTime": "2000-01-23T04:56:07.000+00:00"
+                        }, {
+                            "dayOfWeek": "monday",
+                            "startTime": "2000-01-23T04:56:07.000+00:00",
+                            "endTime": "2000-01-23T04:56:07.000+00:00"
+                        }
+                    ],
+                    "validFrom": "2000-01-23T04:56:07.000+00:00"
+                },
+                "properties": {
+                    "validFrom": {
+                        "description": "The date when the item becomes valid.",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "validThrough": {
+                        "description": "The date after when the item is not valid.",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "timeSlots": {
+                        "description": "The time slots of the business hours for a given week day",
+                        "items": {
+                            "$ref": "#/components/schemas/TimeSlot"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "UserUpdate": {
+                "description": "Carries information about the user",
+                "example": {
+                    "firstName": "firstName",
+                    "lastName": "lastName",
+                    "phoneNumber": "phoneNumber",
+                    "phoneCountryCode": "phoneCountryCode"
+                },
+                "properties": {
+                    "firstName": {
+                        "description": "The user first name",
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "description": "The user last name",
+                        "type": "string"
+                    },
+                    "phoneNumber": {
+                        "description": "The user phone number",
+                        "type": "string"
+                    },
+                    "phoneCountryCode": {
+                        "description": "The user phone country code",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
