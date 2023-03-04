@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Web", "src\Domivice.Users.Web\Domivice.Users.Web.csproj", "{00000000-0000-0000-0000-000000000000}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Domain", "src\Domivice.Users.Domain\Domivice.Users.Domain.csproj", "{D8307FBB-96A3-494D-A625-AC1B87593F1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Infrastructure", "src\Domivice.Users.Infrastructure\Domivice.Users.Infrastructure.csproj", "{25456364-C2AF-443F-B762-F77C54D4D2D6}"
+EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
 								Debug|Any CPU = Debug|Any CPU
@@ -14,6 +18,14 @@ Global
 					{00000000-0000-0000-0000-000000000000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 					{00000000-0000-0000-0000-000000000000}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{00000000-0000-0000-0000-000000000000}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+					{D8307FBB-96A3-494D-A625-AC1B87593F1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{D8307FBB-96A3-494D-A625-AC1B87593F1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{D8307FBB-96A3-494D-A625-AC1B87593F1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{D8307FBB-96A3-494D-A625-AC1B87593F1E}.Release|Any CPU.Build.0 = Release|Any CPU
+					{25456364-C2AF-443F-B762-F77C54D4D2D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{25456364-C2AF-443F-B762-F77C54D4D2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{25456364-C2AF-443F-B762-F77C54D4D2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{25456364-C2AF-443F-B762-F77C54D4D2D6}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(SolutionProperties) = preSolution
 								HideSolutionNode = FALSE
