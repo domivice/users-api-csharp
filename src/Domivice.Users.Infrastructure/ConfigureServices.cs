@@ -1,7 +1,9 @@
+using System.Reflection;
 using Domivice.Users.Application.Common.Interfaces;
 using Domivice.Users.Infrastructure.Persistence;
 using Domivice.Users.Infrastructure.Persistence.Interceptors;
 using Domivice.Users.Infrastructure.Services;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +23,12 @@ public static class ConfigureServices
                 options.AddInterceptors(provider.GetRequiredService<DomiviceSaveChangesInterceptor>());
             }
         );
-        
         services.AddTransient<IDateTime, DateTimeService>();
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumers(Assembly.GetExecutingAssembly());
+            x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+        });
         services.AddTransient<IMessageBus, MassTransitMessageBus>();
 
         return services;
