@@ -7,7 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Domivice.Domain.ValueObjects" Version="1.0.11" />
+      <PackageReference Include="Domivice.Domain.ValueObjects" Version="1.0.15" />
+      <PackageReference Include="Domivice.PagingSorting.Domain" Version="1.0.1" />
+      <PackageReference Include="FluentValidation" Version="11.5.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     </ItemGroup>
 
 </Project>

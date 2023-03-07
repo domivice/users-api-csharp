@@ -20,8 +20,7 @@ namespace Domivice.Users.Web.Controllers;
 
 /// <summary>
 /// </summary>
-[ApiController]
-public class UsersApiController : ControllerBase
+public sealed class UsersApiController : DomiviceControllerBase
 {
     /// <summary>
     ///     List Users
@@ -39,7 +38,7 @@ public class UsersApiController : ControllerBase
     [SwaggerOperation("V1UsersGet")]
     [SwaggerResponse(200, type: typeof(UserList), description: "When a list of 0 or more users are returned")]
     [SwaggerResponse(401, type: typeof(Error), description: "User is not authenticated")]
-    public virtual IActionResult V1UsersGet([FromQuery(Name = "search")] string search,
+    public IActionResult V1UsersGet([FromQuery(Name = "search")] string search,
         [FromQuery(Name = "status")] string status, [FromQuery(Name = "page")] int? page,
         [FromQuery(Name = "pageSize")] int? pageSize, [FromQuery(Name = "sort")] string sort)
     {
@@ -73,7 +72,7 @@ public class UsersApiController : ControllerBase
     [SwaggerResponse(401, type: typeof(Error), description: "User is not authenticated")]
     [SwaggerResponse(403, type: typeof(Error), description: "User is not allowed to perform action")]
     [SwaggerResponse(404, type: typeof(Error), description: "The resource was not found")]
-    public virtual IActionResult V1UsersUserIdDelete([FromRoute(Name = "userId")] [Required] string userId)
+    public IActionResult V1UsersUserIdDelete([FromRoute(Name = "userId")] [Required] string userId)
     {
         //TODO: Uncomment the next line to return response 204 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
         // return StatusCode(204);
@@ -101,7 +100,7 @@ public class UsersApiController : ControllerBase
     [SwaggerResponse(200, type: typeof(User), description: "Response when a user object is returned")]
     [SwaggerResponse(401, type: typeof(Error), description: "User is not authenticated")]
     [SwaggerResponse(404, type: typeof(Error), description: "The resource was not found")]
-    public virtual IActionResult V1UsersUserIdGet([FromRoute(Name = "userId")] [Required] string userId)
+    public IActionResult V1UsersUserIdGet([FromRoute(Name = "userId")] [Required] string userId)
     {
         //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
         // return StatusCode(200, default(User));
@@ -140,7 +139,7 @@ public class UsersApiController : ControllerBase
     [SwaggerResponse(401, type: typeof(Error), description: "User is not authenticated")]
     [SwaggerResponse(403, type: typeof(Error), description: "User is not allowed to perform action")]
     [SwaggerResponse(404, type: typeof(Error), description: "The resource was not found")]
-    public virtual IActionResult V1UsersUserIdPatch([FromRoute(Name = "userId")] [Required] string userId,
+    public IActionResult V1UsersUserIdPatch([FromRoute(Name = "userId")] [Required] string userId,
         [FromBody] UserUpdate userUpdate)
     {
         //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...

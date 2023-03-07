@@ -11,6 +11,8 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Domivice.Users.Application;
+using Domivice.Users.Infrastructure;
 using Domivice.Users.Web.OpenApi;
 using Domivice.Users.Web.Filters;
 using Domivice.Users.Web.Formatters;
@@ -50,6 +52,9 @@ public class Startup
     /// <param name="services"></param>
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddWebServices();
+        services.AddApplicationServices();
+        services.AddInfrastructureServices(Configuration);
         // Add framework services.
         services
             // Don't need the full MVC stack for an API, see https://andrewlock.net/comparing-startup-between-the-asp-net-core-3-templates/

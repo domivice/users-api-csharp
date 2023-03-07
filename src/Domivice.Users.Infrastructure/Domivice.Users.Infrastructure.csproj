@@ -7,14 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Persistence\Configurations" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <PackageReference Include="MassTransit" Version="8.0.13" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.14" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Domivice.Users.Application\Domivice.Users.Application.csproj" />
       <ProjectReference Include="..\Domivice.Users.Domain\Domivice.Users.Domain.csproj" />
     </ItemGroup>
 

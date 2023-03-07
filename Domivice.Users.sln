@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Domain", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Infrastructure", "src\Domivice.Users.Infrastructure\Domivice.Users.Infrastructure.csproj", "{25456364-C2AF-443F-B762-F77C54D4D2D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Application", "src\Domivice.Users.Application\Domivice.Users.Application.csproj", "{2F3CF2BD-F638-4424-A62E-10C03E2F004B}"
+EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
 								Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 					{25456364-C2AF-443F-B762-F77C54D4D2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{25456364-C2AF-443F-B762-F77C54D4D2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{25456364-C2AF-443F-B762-F77C54D4D2D6}.Release|Any CPU.Build.0 = Release|Any CPU
+					{2F3CF2BD-F638-4424-A62E-10C03E2F004B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{2F3CF2BD-F638-4424-A62E-10C03E2F004B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{2F3CF2BD-F638-4424-A62E-10C03E2F004B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{2F3CF2BD-F638-4424-A62E-10C03E2F004B}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(SolutionProperties) = preSolution
 								HideSolutionNode = FALSE
