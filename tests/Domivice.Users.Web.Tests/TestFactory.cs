@@ -1,0 +1,55 @@
+using Domivice.Users.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Respawn;
+using Respawn.Graph;
+
+namespace Domivice.Users.Web.Tests;
+
+public class TestFactory : WebApplicationFactory<Startup>
+{
+    private const string BaseAddress = "https://localhost:5001/";
+    private Respawner _reSpawner;
+    private IConfiguration Configuration { get; }
+
+    public TestFactory()
+    {
+        Configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.Test.json")
+            .Build();
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureAppConfiguration(config => { config.AddConfiguration(Configuration); });
+        builder.ConfigureTestServices(services =>
+        {
+            var sp = services.BuildServiceProvider();
+            using var scope = sp.CreateScope();
+            var scopedServices = scope.ServiceProvider;
+            var dbContext = scopedServices.GetRequiredService<UsersDbContext>();
+            dbContext.Database.Migrate();
+            dbContext.Database.EnsureCreated();
+
+            _reSpawner = Respawner.CreateAsync(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    new RespawnerOptions
+                    {
+                        SchemasToInclude = new[] {"dbo"}, WithReseed = true,
+                        TablesToIgnore = new[] {new Table("__EFMigrationsHistory")}
+                    }).GetAwaiter()
+                .GetResult();
+        });
+        base.ConfigureWebHost(builder);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        _reSpawner.ResetAsync(Configuration.GetConnectionString("DefaultConnection")).GetAwaiter().GetResult();
+        base.Dispose(disposing);
+    }
+}

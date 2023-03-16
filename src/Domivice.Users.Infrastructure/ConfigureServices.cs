@@ -30,6 +30,8 @@ public static class ConfigureServices
             x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
         });
         services.AddTransient<IMessageBus, MassTransitMessageBus>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddTransient(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
         return services;
     }
