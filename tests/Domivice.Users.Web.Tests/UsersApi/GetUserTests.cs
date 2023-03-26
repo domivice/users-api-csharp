@@ -59,7 +59,7 @@ public class GetUserTests
             Guid.NewGuid(),
             FirstName.Create(NamesGenerator.FirstName()).Value,
             LastName.Create(NamesGenerator.LastName()).Value,
-            Email.Create($"{Guid.NewGuid()}@email.com").Value,
+            Email.Create($"{Guid.NewGuid()}@{nameof(GetUserTests)}.com".ToLower()).Value,
             PhoneNumber.Create("4389000000", "CA").Value,
             CultureCode.EnCa
         );

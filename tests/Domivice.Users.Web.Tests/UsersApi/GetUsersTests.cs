@@ -77,20 +77,19 @@ public class GetUsersTests
         var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString(GetEndpoint(), queryString!));
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var userList = await response.Content.ReadFromJsonAsync<UserList>();
-        userList?.Data.Should().OnlyContain(user => user.PhoneNumber.Contains(searchTerm)
-        );
+        userList?.Data.Should().OnlyContain(user => user.PhoneNumber.Contains(searchTerm));
     }
-    
+
     public static TheoryData<Dictionary<string, string>, string> SortTheoryData => new()
     {
-         {new Dictionary<string, string> {{"sort", "firstName"}}, "FirstName"},
-         {new Dictionary<string, string> {{"sort", "firstName:desc"}}, "FirstName"},
-         {new Dictionary<string, string> {{"sort", "lastName"}}, "LastName"},
-         {new Dictionary<string, string> {{"sort", "lastName:desc"}}, "LastName"},
-         {new Dictionary<string, string> {{"sort", "phoneNumber"}}, "PhoneNumber"},
-         {new Dictionary<string, string> {{"sort", "phoneNumber:desc"}}, "PhoneNumber"},
-         {new Dictionary<string, string> {{"sort", "email"}}, "Email"},
-         {new Dictionary<string, string> {{"sort", "email:desc"}}, "Email"}
+        {new Dictionary<string, string> {{"sort", "firstName"}}, "FirstName"},
+        {new Dictionary<string, string> {{"sort", "firstName:desc"}}, "FirstName"},
+        {new Dictionary<string, string> {{"sort", "lastName"}}, "LastName"},
+        {new Dictionary<string, string> {{"sort", "lastName:desc"}}, "LastName"},
+        {new Dictionary<string, string> {{"sort", "phoneNumber"}}, "PhoneNumber"},
+        {new Dictionary<string, string> {{"sort", "phoneNumber:desc"}}, "PhoneNumber"},
+        {new Dictionary<string, string> {{"sort", "email"}}, "Email"},
+        {new Dictionary<string, string> {{"sort", "email:desc"}}, "Email"}
     };
 
     [Theory]
