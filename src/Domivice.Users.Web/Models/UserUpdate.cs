@@ -9,6 +9,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
@@ -50,6 +52,54 @@ public class UserUpdate : IEquatable<UserUpdate>
     public string PhoneCountryCode { get; set; }
 
     /// <summary>
+    ///     The user display language
+    /// </summary>
+    /// <value>The user display language</value>
+    [DataMember(Name = "displayLanguage", EmitDefaultValue = false)]
+    public string DisplayLanguage { get; set; }
+
+    /// <summary>
+    ///     The user biography
+    /// </summary>
+    /// <value>The user biography</value>
+    [DataMember(Name = "userBio", EmitDefaultValue = false)]
+    public string UserBio { get; set; }
+
+    /// <summary>
+    ///     The user website
+    /// </summary>
+    /// <value>The user website</value>
+    [DataMember(Name = "website", EmitDefaultValue = false)]
+    public string Website { get; set; }
+
+    /// <summary>
+    ///     The user entry instructions
+    /// </summary>
+    /// <value>The user entry instructions</value>
+    [DataMember(Name = "entryInstructions", EmitDefaultValue = false)]
+    public string EntryInstructions { get; set; }
+
+    /// <summary>
+    ///     Gets or Sets HomeAddress
+    /// </summary>
+    [DataMember(Name = "homeAddress", EmitDefaultValue = false)]
+    public Address HomeAddress { get; set; }
+
+    /// <summary>
+    ///     The user languages
+    /// </summary>
+    /// <value>The user languages</value>
+    [DataMember(Name = "languages", EmitDefaultValue = false)]
+    public List<string> Languages { get; set; }
+
+    /// <summary>
+    ///     The user social media urls
+    /// </summary>
+    /// <value>The user social media urls</value>
+    [DataMember(Name = "socialMediaUrls", EmitDefaultValue = false)]
+    public List<SocialMediaUrl> SocialMediaUrls { get; set; }
+
+    /// <summary>
     ///     Returns true if UserUpdate instances are equal
     /// </summary>
     /// <param name="other">Instance of UserUpdate to be compared</param>
@@ -79,6 +129,43 @@ public class UserUpdate : IEquatable<UserUpdate>
                 PhoneCountryCode == other.PhoneCountryCode ||
                 (PhoneCountryCode != null &&
                  PhoneCountryCode.Equals(other.PhoneCountryCode))
+            ) &&
+            (
+                DisplayLanguage == other.DisplayLanguage ||
+                (DisplayLanguage != null &&
+                 DisplayLanguage.Equals(other.DisplayLanguage))
+            ) &&
+            (
+                UserBio == other.UserBio ||
+                (UserBio != null &&
+                 UserBio.Equals(other.UserBio))
+            ) &&
+            (
+                Website == other.Website ||
+                (Website != null &&
+                 Website.Equals(other.Website))
+            ) &&
+            (
+                EntryInstructions == other.EntryInstructions ||
+                (EntryInstructions != null &&
+                 EntryInstructions.Equals(other.EntryInstructions))
+            ) &&
+            (
+                HomeAddress == other.HomeAddress ||
+                (HomeAddress != null &&
+                 HomeAddress.Equals(other.HomeAddress))
+            ) &&
+            (
+                Languages == other.Languages ||
+                (Languages != null &&
+                 other.Languages != null &&
+                 Languages.SequenceEqual(other.Languages))
+            ) &&
+            (
+                SocialMediaUrls == other.SocialMediaUrls ||
+                (SocialMediaUrls != null &&
+                 other.SocialMediaUrls != null &&
+                 SocialMediaUrls.SequenceEqual(other.SocialMediaUrls))
             );
     }
 
@@ -94,6 +181,13 @@ public class UserUpdate : IEquatable<UserUpdate>
         sb.Append("  LastName: ").Append(LastName).Append("\n");
         sb.Append("  PhoneNumber: ").Append(PhoneNumber).Append("\n");
         sb.Append("  PhoneCountryCode: ").Append(PhoneCountryCode).Append("\n");
+        sb.Append("  DisplayLanguage: ").Append(DisplayLanguage).Append("\n");
+        sb.Append("  UserBio: ").Append(UserBio).Append("\n");
+        sb.Append("  Website: ").Append(Website).Append("\n");
+        sb.Append("  EntryInstructions: ").Append(EntryInstructions).Append("\n");
+        sb.Append("  HomeAddress: ").Append(HomeAddress).Append("\n");
+        sb.Append("  Languages: ").Append(Languages).Append("\n");
+        sb.Append("  SocialMediaUrls: ").Append(SocialMediaUrls).Append("\n");
         sb.Append("}\n");
         return sb.ToString();
     }
@@ -137,6 +231,20 @@ public class UserUpdate : IEquatable<UserUpdate>
                 hashCode = hashCode * 59 + PhoneNumber.GetHashCode();
             if (PhoneCountryCode != null)
                 hashCode = hashCode * 59 + PhoneCountryCode.GetHashCode();
+            if (DisplayLanguage != null)
+                hashCode = hashCode * 59 + DisplayLanguage.GetHashCode();
+            if (UserBio != null)
+                hashCode = hashCode * 59 + UserBio.GetHashCode();
+            if (Website != null)
+                hashCode = hashCode * 59 + Website.GetHashCode();
+            if (EntryInstructions != null)
+                hashCode = hashCode * 59 + EntryInstructions.GetHashCode();
+            if (HomeAddress != null)
+                hashCode = hashCode * 59 + HomeAddress.GetHashCode();
+            if (Languages != null)
+                hashCode = hashCode * 59 + Languages.GetHashCode();
+            if (SocialMediaUrls != null)
+                hashCode = hashCode * 59 + SocialMediaUrls.GetHashCode();
             return hashCode;
         }
     }

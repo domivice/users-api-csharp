@@ -30,7 +30,7 @@ public class UserList : IEquatable<UserList>
     /// <value>The user list</value>
     [Required]
     [DataMember(Name = "data", EmitDefaultValue = false)]
-    public List<User> Data { get; set; }
+    public List<BasicUser> Data { get; set; }
 
     /// <summary>
     ///     The URL to access the next page

@@ -11,6 +11,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.ToTable("Users");
         builder.HasKey(u => u.Id);
+        builder.Property(u => u.Id).ValueGeneratedNever();
         builder.Property(u => u.FirstName).HasConversion(
             v => v.Value,
             v => FirstName.Create(v).Value);
@@ -45,5 +46,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(smUrl => smUrl.User)
             .HasForeignKey(smUrl => smUrl.UserId)
             .IsRequired();
+        builder.Navigation(u => u.UserLanguages).AutoInclude();
+        builder.Navigation(u => u.UserSocialMediaUrls).AutoInclude();
+        builder.Navigation(u => u.HomeAddress).AutoInclude();
     }
 }

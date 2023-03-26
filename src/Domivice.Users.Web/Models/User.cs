@@ -9,7 +9,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
@@ -55,20 +57,61 @@ public class User : IEquatable<User>
     public string LastName { get; set; }
 
     /// <summary>
-    ///     The user status
-    /// </summary>
-    /// <value>The user status</value>
-    [Required]
-    [DataMember(Name = "status", EmitDefaultValue = false)]
-    public string Status { get; set; }
-
-    /// <summary>
     ///     The user phone number
     /// </summary>
     /// <value>The user phone number</value>
     [Required]
     [DataMember(Name = "phoneNumber", EmitDefaultValue = false)]
     public string PhoneNumber { get; set; }
+
+    /// <summary>
+    ///     The user display language
+    /// </summary>
+    /// <value>The user display language</value>
+    [Required]
+    [DataMember(Name = "displayLanguage", EmitDefaultValue = false)]
+    public string DisplayLanguage { get; set; }
+
+    /// <summary>
+    ///     The user biography
+    /// </summary>
+    /// <value>The user biography</value>
+    [DataMember(Name = "userBio", EmitDefaultValue = false)]
+    public string UserBio { get; set; }
+
+    /// <summary>
+    ///     The user website
+    /// </summary>
+    /// <value>The user website</value>
+    [DataMember(Name = "website", EmitDefaultValue = false)]
+    public string Website { get; set; }
+
+    /// <summary>
+    ///     The user entry instructions
+    /// </summary>
+    /// <value>The user entry instructions</value>
+    [DataMember(Name = "entryInstructions", EmitDefaultValue = false)]
+    public string EntryInstructions { get; set; }
+
+    /// <summary>
+    ///     Gets or Sets HomeAddress
+    /// </summary>
+    [DataMember(Name = "homeAddress", EmitDefaultValue = false)]
+    public Address HomeAddress { get; set; }
+
+    /// <summary>
+    ///     The user languages
+    /// </summary>
+    /// <value>The user languages</value>
+    [DataMember(Name = "languages", EmitDefaultValue = false)]
+    public List<string> Languages { get; set; }
+
+    /// <summary>
+    ///     The user social media urls
+    /// </summary>
+    /// <value>The user social media urls</value>
+    [DataMember(Name = "socialMediaUrls", EmitDefaultValue = false)]
+    public List<SocialMediaUrl> SocialMediaUrls { get; set; }
 
     /// <summary>
     ///     Returns true if User instances are equal
@@ -102,14 +145,46 @@ public class User : IEquatable<User>
                  LastName.Equals(other.LastName))
             ) &&
             (
-                Status == other.Status ||
-                (Status != null &&
-                 Status.Equals(other.Status))
-            ) &&
-            (
                 PhoneNumber == other.PhoneNumber ||
                 (PhoneNumber != null &&
                  PhoneNumber.Equals(other.PhoneNumber))
+            ) &&
+            (
+                DisplayLanguage == other.DisplayLanguage ||
+                (DisplayLanguage != null &&
+                 DisplayLanguage.Equals(other.DisplayLanguage))
+            ) &&
+            (
+                UserBio == other.UserBio ||
+                (UserBio != null &&
+                 UserBio.Equals(other.UserBio))
+            ) &&
+            (
+                Website == other.Website ||
+                (Website != null &&
+                 Website.Equals(other.Website))
+            ) &&
+            (
+                EntryInstructions == other.EntryInstructions ||
+                (EntryInstructions != null &&
+                 EntryInstructions.Equals(other.EntryInstructions))
+            ) &&
+            (
+                HomeAddress == other.HomeAddress ||
+                (HomeAddress != null &&
+                 HomeAddress.Equals(other.HomeAddress))
+            ) &&
+            (
+                Languages == other.Languages ||
+                (Languages != null &&
+                 other.Languages != null &&
+                 Languages.SequenceEqual(other.Languages))
+            ) &&
+            (
+                SocialMediaUrls == other.SocialMediaUrls ||
+                (SocialMediaUrls != null &&
+                 other.SocialMediaUrls != null &&
+                 SocialMediaUrls.SequenceEqual(other.SocialMediaUrls))
             );
     }
 
@@ -125,8 +200,14 @@ public class User : IEquatable<User>
         sb.Append("  Email: ").Append(Email).Append("\n");
         sb.Append("  FirstName: ").Append(FirstName).Append("\n");
         sb.Append("  LastName: ").Append(LastName).Append("\n");
-        sb.Append("  Status: ").Append(Status).Append("\n");
         sb.Append("  PhoneNumber: ").Append(PhoneNumber).Append("\n");
+        sb.Append("  DisplayLanguage: ").Append(DisplayLanguage).Append("\n");
+        sb.Append("  UserBio: ").Append(UserBio).Append("\n");
+        sb.Append("  Website: ").Append(Website).Append("\n");
+        sb.Append("  EntryInstructions: ").Append(EntryInstructions).Append("\n");
+        sb.Append("  HomeAddress: ").Append(HomeAddress).Append("\n");
+        sb.Append("  Languages: ").Append(Languages).Append("\n");
+        sb.Append("  SocialMediaUrls: ").Append(SocialMediaUrls).Append("\n");
         sb.Append("}\n");
         return sb.ToString();
     }
@@ -170,10 +251,22 @@ public class User : IEquatable<User>
                 hashCode = hashCode * 59 + FirstName.GetHashCode();
             if (LastName != null)
                 hashCode = hashCode * 59 + LastName.GetHashCode();
-            if (Status != null)
-                hashCode = hashCode * 59 + Status.GetHashCode();
             if (PhoneNumber != null)
                 hashCode = hashCode * 59 + PhoneNumber.GetHashCode();
+            if (DisplayLanguage != null)
+                hashCode = hashCode * 59 + DisplayLanguage.GetHashCode();
+            if (UserBio != null)
+                hashCode = hashCode * 59 + UserBio.GetHashCode();
+            if (Website != null)
+                hashCode = hashCode * 59 + Website.GetHashCode();
+            if (EntryInstructions != null)
+                hashCode = hashCode * 59 + EntryInstructions.GetHashCode();
+            if (HomeAddress != null)
+                hashCode = hashCode * 59 + HomeAddress.GetHashCode();
+            if (Languages != null)
+                hashCode = hashCode * 59 + Languages.GetHashCode();
+            if (SocialMediaUrls != null)
+                hashCode = hashCode * 59 + SocialMediaUrls.GetHashCode();
             return hashCode;
         }
     }

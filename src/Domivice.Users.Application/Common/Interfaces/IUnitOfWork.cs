@@ -1,4 +1,3 @@
-
 using Domivice.Users.Domain.Entities;
 
 namespace Domivice.Users.Application.Common.Interfaces;

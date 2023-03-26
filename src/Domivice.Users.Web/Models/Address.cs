@@ -9,13 +9,10 @@
  */
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Text;
-using Domivice.Users.Web.Converters;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Domivice.Users.Web.Models;
 
@@ -24,55 +21,6 @@ namespace Domivice.Users.Web.Models;
 [DataContract]
 public class Address : IEquatable<Address>
 {
-    /// <summary>
-    ///     The address type. Newly created addresses should default to secondary
-    /// </summary>
-    /// <value>The address type. Newly created addresses should default to secondary</value>
-    [TypeConverter(typeof(CustomEnumConverter<TypeEnum>))]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum TypeEnum
-    {
-        /// <summary>
-        ///     Enum PrimaryEnum for Primary
-        /// </summary>
-        [EnumMember(Value = "Primary")] PrimaryEnum = 1,
-
-        /// <summary>
-        ///     Enum SecondaryEnum for Secondary
-        /// </summary>
-        [EnumMember(Value = "Secondary")] SecondaryEnum = 2
-    }
-
-    /// <summary>
-    ///     The user id
-    /// </summary>
-    /// <value>The user id</value>
-    [Required]
-    [DataMember(Name = "userId", EmitDefaultValue = false)]
-    public string UserId { get; set; }
-
-    /// <summary>
-    ///     The address line 1
-    /// </summary>
-    /// <value>The address line 1</value>
-    [Required]
-    [DataMember(Name = "addressLine1", EmitDefaultValue = false)]
-    public string AddressLine1 { get; set; }
-
-    /// <summary>
-    ///     The address line 2
-    /// </summary>
-    /// <value>The address line 2</value>
-    [DataMember(Name = "addressLine2", EmitDefaultValue = false)]
-    public string AddressLine2 { get; set; }
-
-    /// <summary>
-    ///     The address line 3
-    /// </summary>
-    /// <value>The address line 3</value>
-    [DataMember(Name = "addressLine3", EmitDefaultValue = false)]
-    public string AddressLine3 { get; set; }
-
     /// <summary>
     ///     The city
     /// </summary>
@@ -106,20 +54,12 @@ public class Address : IEquatable<Address>
     public string State { get; set; }
 
     /// <summary>
-    ///     The address id
+    ///     The street part of the address
     /// </summary>
-    /// <value>The address id</value>
+    /// <value>The street part of the address</value>
     [Required]
-    [DataMember(Name = "id", EmitDefaultValue = false)]
-    public string Id { get; set; }
-
-    /// <summary>
-    ///     The address type. Newly created addresses should default to secondary
-    /// </summary>
-    /// <value>The address type. Newly created addresses should default to secondary</value>
-    [Required]
-    [DataMember(Name = "type", EmitDefaultValue = true)]
-    public TypeEnum Type { get; set; }
+    [DataMember(Name = "street", EmitDefaultValue = false)]
+    public string Street { get; set; }
 
     /// <summary>
     ///     Returns true if Address instances are equal
@@ -132,26 +72,6 @@ public class Address : IEquatable<Address>
         if (ReferenceEquals(this, other)) return true;
 
         return
-            (
-                UserId == other.UserId ||
-                (UserId != null &&
-                 UserId.Equals(other.UserId))
-            ) &&
-            (
-                AddressLine1 == other.AddressLine1 ||
-                (AddressLine1 != null &&
-                 AddressLine1.Equals(other.AddressLine1))
-            ) &&
-            (
-                AddressLine2 == other.AddressLine2 ||
-                (AddressLine2 != null &&
-                 AddressLine2.Equals(other.AddressLine2))
-            ) &&
-            (
-                AddressLine3 == other.AddressLine3 ||
-                (AddressLine3 != null &&
-                 AddressLine3.Equals(other.AddressLine3))
-            ) &&
             (
                 City == other.City ||
                 (City != null &&
@@ -173,13 +93,9 @@ public class Address : IEquatable<Address>
                  State.Equals(other.State))
             ) &&
             (
-                Id == other.Id ||
-                (Id != null &&
-                 Id.Equals(other.Id))
-            ) &&
-            (
-                Type == other.Type ||
-                Type.Equals(other.Type)
+                Street == other.Street ||
+                (Street != null &&
+                 Street.Equals(other.Street))
             );
     }
 
@@ -191,16 +107,11 @@ public class Address : IEquatable<Address>
     {
         var sb = new StringBuilder();
         sb.Append("class Address {\n");
-        sb.Append("  UserId: ").Append(UserId).Append("\n");
-        sb.Append("  AddressLine1: ").Append(AddressLine1).Append("\n");
-        sb.Append("  AddressLine2: ").Append(AddressLine2).Append("\n");
-        sb.Append("  AddressLine3: ").Append(AddressLine3).Append("\n");
         sb.Append("  City: ").Append(City).Append("\n");
         sb.Append("  Country: ").Append(Country).Append("\n");
         sb.Append("  PostalCode: ").Append(PostalCode).Append("\n");
         sb.Append("  State: ").Append(State).Append("\n");
-        sb.Append("  Id: ").Append(Id).Append("\n");
-        sb.Append("  Type: ").Append(Type).Append("\n");
+        sb.Append("  Street: ").Append(Street).Append("\n");
         sb.Append("}\n");
         return sb.ToString();
     }
@@ -236,14 +147,6 @@ public class Address : IEquatable<Address>
         {
             var hashCode = 41;
             // Suitable nullity checks etc, of course :)
-            if (UserId != null)
-                hashCode = hashCode * 59 + UserId.GetHashCode();
-            if (AddressLine1 != null)
-                hashCode = hashCode * 59 + AddressLine1.GetHashCode();
-            if (AddressLine2 != null)
-                hashCode = hashCode * 59 + AddressLine2.GetHashCode();
-            if (AddressLine3 != null)
-                hashCode = hashCode * 59 + AddressLine3.GetHashCode();
             if (City != null)
                 hashCode = hashCode * 59 + City.GetHashCode();
             if (Country != null)
@@ -252,10 +155,8 @@ public class Address : IEquatable<Address>
                 hashCode = hashCode * 59 + PostalCode.GetHashCode();
             if (State != null)
                 hashCode = hashCode * 59 + State.GetHashCode();
-            if (Id != null)
-                hashCode = hashCode * 59 + Id.GetHashCode();
-
-            hashCode = hashCode * 59 + Type.GetHashCode();
+            if (Street != null)
+                hashCode = hashCode * 59 + Street.GetHashCode();
             return hashCode;
         }
     }

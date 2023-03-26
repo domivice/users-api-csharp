@@ -7,7 +7,6 @@ public sealed class UnitOfWork : IUnitOfWork
 {
     private readonly UsersDbContext _context;
     private bool _disposed;
-    public IGenericRepository<User, Guid> UserRepository { get; }
 
     public UnitOfWork(UsersDbContext context,
         IGenericRepository<User, Guid> userRepository)
@@ -15,6 +14,8 @@ public sealed class UnitOfWork : IUnitOfWork
         _context = context;
         UserRepository = userRepository;
     }
+
+    public IGenericRepository<User, Guid> UserRepository { get; }
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

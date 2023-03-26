@@ -40,7 +40,6 @@ namespace Domivice.Users.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EntryInstructions")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
@@ -55,11 +54,9 @@ namespace Domivice.Users.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserBio")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Website")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -173,8 +170,7 @@ namespace Domivice.Users.Infrastructure.Persistence.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("HomeAddress")
-                        .IsRequired();
+                    b.Navigation("HomeAddress");
 
                     b.Navigation("PhoneNumber")
                         .IsRequired();

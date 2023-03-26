@@ -13,9 +13,9 @@ using System.IO;
 using System.Reflection;
 using Domivice.Users.Application;
 using Domivice.Users.Infrastructure;
-using Domivice.Users.Web.OpenApi;
 using Domivice.Users.Web.Filters;
 using Domivice.Users.Web.Formatters;
+using Domivice.Users.Web.OpenApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -93,7 +93,7 @@ public class Startup
                 });
                 c.CustomSchemaIds(type => type.FriendlyId(true));
                 c.IncludeXmlComments(
-                    $"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{Assembly.GetEntryAssembly().GetName().Name}.xml");
+                    $"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}Domivice.Users.Web.xml");
 
                 // Include DataAnnotation attributes on Controller Action parameters as OpenAPI validation rules (e.g required, pattern, ..)
                 // Use [ValidateModelState] on Actions to actually validate it in C# as well!

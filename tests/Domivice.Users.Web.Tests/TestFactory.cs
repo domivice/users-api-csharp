@@ -12,9 +12,7 @@ namespace Domivice.Users.Web.Tests;
 
 public class TestFactory : WebApplicationFactory<Startup>
 {
-    private const string BaseAddress = "https://localhost:5001/";
     private Respawner _reSpawner;
-    private IConfiguration Configuration { get; }
 
     public TestFactory()
     {
@@ -22,6 +20,8 @@ public class TestFactory : WebApplicationFactory<Startup>
             .AddJsonFile("appsettings.Test.json")
             .Build();
     }
+
+    private IConfiguration Configuration { get; }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -51,5 +51,11 @@ public class TestFactory : WebApplicationFactory<Startup>
     {
         _reSpawner.ResetAsync(Configuration.GetConnectionString("DefaultConnection")).GetAwaiter().GetResult();
         base.Dispose(disposing);
+    }
+
+    public IServiceScope GetServiceScope()
+    {
+        var serviceScope = Services.GetRequiredService<IServiceScopeFactory>();
+        return serviceScope.CreateScope();
     }
 }

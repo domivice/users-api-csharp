@@ -4,6 +4,7 @@ namespace Domivice.Users.Application.Users.ReadModels;
 
 public class UserRm
 {
+    public Guid Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
@@ -20,6 +21,7 @@ public class UserRm
     {
         return new UserRm
         {
+            Id = user.Id,
             FirstName = user.FirstName.Value,
             LastName = user.LastName.Value,
             Email = user.Email.Value,
@@ -29,8 +31,8 @@ public class UserRm
             Website = user.Website?.ToString(),
             EntryInstructions = user.EntryInstructions?.Value,
             Languages = user.UserLanguages.ToList().ConvertAll(l => l.LanguageCode.Value),
-            SocialMediaUrls = user.UserSocialMediaUrls.ToList().ConvertAll(url => (SocialMediaUrlRm) url),
-            HomeAddress = user.HomeAddress!.Equals(null!) ? null : (AddressRm) user.HomeAddress
+            SocialMediaUrls = user.UserSocialMediaUrls.ToList().ConvertAll(url => (SocialMediaUrlRm)url),
+            HomeAddress = user.HomeAddress is null ? null : (AddressRm)user.HomeAddress
         };
     }
 }

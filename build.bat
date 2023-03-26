@@ -3,7 +3,7 @@
 
 @echo off
 
-dotnet restore src\Domivice.Users
-dotnet build src\Domivice.Users
-echo Now, run the following to start the project: dotnet run -p src\Domivice.Users\Domivice.Users.csproj --launch-profile web.
+dotnet restore src\Domivice.Users.Web
+dotnet build src\Domivice.Users.Web
+echo Now, run the following to start the project: dotnet run -p src\Domivice.Users.Web\Domivice.Users.Web.csproj --launch-profile web.
 echo.

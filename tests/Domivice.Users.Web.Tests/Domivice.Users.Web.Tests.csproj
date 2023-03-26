@@ -28,4 +28,10 @@
       <ProjectReference Include="..\..\src\Domivice.Users.Web\Domivice.Users.Web.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="appsettings.Test.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

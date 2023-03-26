@@ -1,10 +1,28 @@
 using Domivice.Domain.ValueObjects;
-using FluentResults;
+using Domivice.Users.Domain.ValueObjects;
 
 namespace Domivice.Users.Domain.Entities;
 
 public sealed class User : BaseEntity<Guid>
 {
+    private readonly List<UserLanguage> _userLanguages = new();
+    private readonly List<UserSocialMediaUrl> _userSocialMediaUrls = new();
+
+    private User()
+    {
+    }
+
+    public User(Guid userId,FirstName firstName, LastName lastName, Email email, PhoneNumber phoneNumber,
+        CultureCode displayLanguage)
+    {
+        Id = userId;
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        PhoneNumber = phoneNumber;
+        DisplayLanguage = displayLanguage;
+    }
+
     public FirstName FirstName { get; private set; }
     public LastName LastName { get; private set; }
     public Email Email { get; private set; }
@@ -14,26 +32,8 @@ public sealed class User : BaseEntity<Guid>
     public Address? HomeAddress { get; private set; }
     public Uri? Website { get; private set; }
     public Text? EntryInstructions { get; private set; }
-    private readonly List<UserLanguage> _userLanguages = new();
-    private readonly List<UserSocialMediaUrl> _userSocialMediaUrls = new();
     public IEnumerable<UserLanguage> UserLanguages => _userLanguages.AsReadOnly();
     public IEnumerable<UserSocialMediaUrl> UserSocialMediaUrls => _userSocialMediaUrls.AsReadOnly();
-
-    private const int MaxUserLanguages = 3;
-
-    private User()
-    {
-    }
-
-    public User(FirstName firstName, LastName lastName, Email email, PhoneNumber phoneNumber,
-        CultureCode displayLanguage)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        PhoneNumber = phoneNumber;
-        DisplayLanguage = displayLanguage;
-    }
 
     public void UpdateFirstName(FirstName firstName)
     {
@@ -79,25 +79,15 @@ public sealed class User : BaseEntity<Guid>
     {
         EntryInstructions = instructions;
     }
-
-    public Result SetUserLanguages(List<LanguageCode> newLanguageCodes)
+    public void SetUserLanguages(UserLanguageList userLanguageList)
     {
-        if (newLanguageCodes.Count > MaxUserLanguages)
-        {
-            return Result.Fail($"User has reached the maximum ({MaxUserLanguages}) allowed languages.");
-        }
-
         // Remove user languages which are not part of the new list
-        _userLanguages.RemoveAll(userLanguage => !newLanguageCodes.Contains(userLanguage.LanguageCode));
+        _userLanguages.RemoveAll(userLanguage => !userLanguageList.Value.Contains(userLanguage.LanguageCode));
 
         // Add user languages which have not already been added
-        foreach (var newLanguageCode in newLanguageCodes.Where(newLanguageCode =>
+        foreach (var newLanguageCode in userLanguageList.Value.Where(newLanguageCode =>
                      !_userLanguages.Any(userLanguage => userLanguage.LanguageCode.Equals(newLanguageCode))))
-        {
             _userLanguages.Add(UserLanguage.Create(newLanguageCode).Value);
-        }
-
-        return Result.Ok();
     }
 
     public void SetUserSocialMediaUrls(List<SocialMediaUrl> newSocialMediaUrls)
@@ -108,8 +98,17 @@ public sealed class User : BaseEntity<Guid>
         foreach (var newSocialMediaUrl in newSocialMediaUrls.Where(newSocialMediaUrl =>
                      !_userSocialMediaUrls.Any(userSocialMediaUrl =>
                          userSocialMediaUrl.SocialMediaUrl.Equals(newSocialMediaUrl))))
-        {
             _userSocialMediaUrls.Add(UserSocialMediaUrl.Create(newSocialMediaUrl).Value);
-        }
+    }
+    
+    public void SetUserSocialMediaUrls(UserSocialMediaUrlList userSocialMediaUrlList)
+    {
+        _userSocialMediaUrls.RemoveAll(userSocialMediaUrl =>
+            !userSocialMediaUrlList.Value.Contains(userSocialMediaUrl.SocialMediaUrl));
+
+        foreach (var newSocialMediaUrl in userSocialMediaUrlList.Value.Where(newSocialMediaUrl =>
+                     !_userSocialMediaUrls.Any(userSocialMediaUrl =>
+                         userSocialMediaUrl.SocialMediaUrl.Equals(newSocialMediaUrl))))
+            _userSocialMediaUrls.Add(UserSocialMediaUrl.Create(newSocialMediaUrl).Value);
     }
 }

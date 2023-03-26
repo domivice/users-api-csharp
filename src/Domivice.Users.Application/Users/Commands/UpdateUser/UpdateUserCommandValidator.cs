@@ -1,4 +1,5 @@
 using Domivice.Domain.ValueObjects;
+using Domivice.Users.Domain.ValueObjects;
 using FluentValidation;
 
 namespace Domivice.Users.Application.Users.Commands.UpdateUser;
@@ -11,7 +12,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
             .NotEmpty().WithMessage("A user id is required.")
             .NotNull().WithMessage("A user id is required.")
             .Must(userId => Guid.TryParse(userId, out _))
-            .WithMessage("The user id is not in the right format.");
+            .WithMessage("We could not find a user with the provided id. Please verify the user id and try again.");
 
         When(command => !string.IsNullOrEmpty(command.FirstName), () =>
         {
@@ -102,20 +103,40 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
         When(command => command.HomeAddress != null,
             () => { RuleFor(command => command.HomeAddress).SetValidator(new AddressValidator()!); });
 
-        When(command => command.UserLanguages != null, () =>
+        When(command => command.Languages.Any(), () =>
         {
-            RuleForEach(command => command.UserLanguages).Custom((language, context) =>
+            RuleForEach(command => command.Languages).Custom((languageCode, context) =>
             {
-                var result = LanguageCode.Create(language);
+                var result = LanguageCode.Create(languageCode);
                 if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
             });
         });
 
-        When(command => command.UserSocialMediaUrls != null, () =>
+        When(command => command.Languages.All(languageCode => LanguageCode.Create(languageCode).IsSuccess), () =>
         {
-            RuleForEach(command => command.UserSocialMediaUrls).Custom((socialMediaUrl, context) =>
+            RuleFor(command => command.Languages).Custom((languages, context) =>
+            {
+                var result = UserLanguageList.Create(languages.ConvertAll(l => LanguageCode.Create(l).Value));
+                if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
+            });
+        });
+
+        When(command => command.SocialMediaUrls.Any(), () =>
+        {
+            RuleForEach(command => command.SocialMediaUrls).Custom((socialMediaUrl, context) =>
             {
                 var result = SocialMediaUrl.Create(socialMediaUrl.Site, socialMediaUrl.Uri);
+                if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
+            });
+        });
+
+        When(command => command.SocialMediaUrls.All(url => SocialMediaUrl.Create(url.Site, url.Uri).IsSuccess), () =>
+        {
+            RuleFor(command => command.SocialMediaUrls).Custom((socialMediaUrls, context) =>
+            {
+                var result =
+                    UserSocialMediaUrlList.Create(socialMediaUrls.ConvertAll(url =>
+                        SocialMediaUrl.Create(url.Site, url.Uri).Value));
                 if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
             });
         });

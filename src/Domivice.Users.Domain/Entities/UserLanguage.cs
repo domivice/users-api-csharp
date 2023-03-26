@@ -16,12 +16,12 @@ public sealed class UserLanguage : BaseEntity<Guid>
         LanguageCode = languageCode;
     }
 
+    public Guid UserId { get; }
+    public User User { get; }
+    public LanguageCode LanguageCode { get; }
+
     public static Result<UserLanguage> Create(LanguageCode languageCode)
     {
         return new UserLanguage(languageCode);
     }
-
-    public Guid UserId { get; }
-    public User User { get; }
-    public LanguageCode LanguageCode { get; }
 }

@@ -1,4 +1,4 @@
-# Domivice.Users - ASP.NET Core 6.0 Server
+# Domivice.Users.Web - ASP.NET Core 6.0 Server
 
 The users API
 
@@ -44,7 +44,7 @@ build.bat
 ## Run in Docker
 
 ```
-cd src/Domivice.Users
-docker build -t domivice.users .
-docker run -p 5000:8080 domivice.users
+cd src/Domivice.Users.Web
+docker build -t domivice.users.web .
+docker run -p 5000:8080 domivice.users.web
 ```

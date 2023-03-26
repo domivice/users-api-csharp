@@ -33,6 +33,6 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         if (!failures.Any()) return await next();
 
-        return (dynamic) Result.Fail(new ValidationError(failures));
+        return (dynamic)Result.Fail(new ValidationError(failures));
     }
 }

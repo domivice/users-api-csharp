@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Domivice.Users.Web;
 
 /// <summary>
-/// 
 /// </summary>
 public static class ConfigureServices
 {

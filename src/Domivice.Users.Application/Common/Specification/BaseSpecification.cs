@@ -40,11 +40,13 @@ public class BaseSpecification<TEntity> : ISpecification<TEntity>
             OrderExpressions.Add(new OrderExpression<TEntity>(BuildLambdaExpression(key), value));
     }
 
-    private static Expression<Func<TEntity, object>> BuildLambdaExpression(string propertyName)
+    private static Expression<Func<TEntity, object>> BuildLambdaExpression(string propertyPath)
     {
         var parameterExpression = Expression.Parameter(typeof(TEntity), "p");
-        var property = Expression.Property(parameterExpression, propertyName);
-
-        return Expression.Lambda<Func<TEntity, object>>(property, parameterExpression);
+        var propertyNodes = propertyPath.Split(".");
+        var memberExpression = Expression.Property(parameterExpression, propertyNodes.First());
+        memberExpression = propertyNodes.Skip(1).Aggregate(memberExpression, Expression.Property);
+        
+        return Expression.Lambda<Func<TEntity, object>>(memberExpression, parameterExpression);
     }
 }

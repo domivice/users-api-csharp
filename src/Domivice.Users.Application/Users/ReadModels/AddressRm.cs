@@ -12,7 +12,7 @@ public class AddressRm
 
     public static explicit operator AddressRm(Address address)
     {
-        return new AddressRm()
+        return new AddressRm
         {
             City = address.City,
             Country = address.Country,
