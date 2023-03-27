@@ -22,12 +22,12 @@ public class GetUsersTests
     private readonly HttpClient _httpClient;
     private readonly List<User> _testUsers;
 
-    public GetUsersTests(TestFactory factory)
+    public GetUsersTests(TestServer server)
     {
-        _httpClient = factory.CreateClient();
+        _httpClient = server.CreateClient();
         _httpClient.BaseAddress = new Uri("https://localhost:5005/");
 
-        var scope = factory.GetServiceScope();
+        var scope = server.GetServiceScope();
         _testUsers = BuildUserEntities(50);
         var dbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
         dbContext.Users.AddRange(_testUsers);

@@ -19,12 +19,12 @@ public class GetUserTests
     private readonly HttpClient _httpClient;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetUserTests(TestFactory factory)
+    public GetUserTests(TestServer server)
     {
-        _httpClient = factory.CreateClient();
+        _httpClient = server.CreateClient();
         _httpClient.BaseAddress = new Uri("https://localhost:5005/");
 
-        var scope = factory.GetServiceScope();
+        var scope = server.GetServiceScope();
         _unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
     }
     private static string GetEndpoint(string userId)

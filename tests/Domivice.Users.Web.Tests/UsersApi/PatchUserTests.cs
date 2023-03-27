@@ -27,12 +27,12 @@ public class PatchUserTests
     private readonly HttpClient _httpClient;
     private readonly IUnitOfWork _unitOfWork;
 
-    public PatchUserTests(TestFactory factory)
+    public PatchUserTests(TestServer server)
     {
-        _httpClient = factory.CreateClient();
+        _httpClient = server.CreateClient();
         _httpClient.BaseAddress = new Uri("https://localhost:5005/");
 
-        var scope = factory.GetServiceScope();
+        var scope = server.GetServiceScope();
         _unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
     }
 

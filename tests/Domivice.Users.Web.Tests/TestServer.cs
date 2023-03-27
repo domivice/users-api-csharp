@@ -10,11 +10,11 @@ using Respawn.Graph;
 
 namespace Domivice.Users.Web.Tests;
 
-public class TestFactory : WebApplicationFactory<Startup>
+public class TestServer : WebApplicationFactory<Startup>
 {
     private Respawner _reSpawner;
 
-    public TestFactory()
+    public TestServer()
     {
         Configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Test.json")

@@ -20,12 +20,12 @@ public class DeleteUserTests
     private readonly IUnitOfWork _unitOfWork;
     private readonly UsersDbContext _dbContext;
     
-    public DeleteUserTests(TestFactory factory)
+    public DeleteUserTests(TestServer server)
     {
-        _httpClient = factory.CreateClient();
+        _httpClient = server.CreateClient();
         _httpClient.BaseAddress = new Uri("https://localhost:5005/");
 
-        var scope = factory.GetServiceScope();
+        var scope = server.GetServiceScope();
         _unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
         _dbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
     }
