@@ -13,26 +13,23 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
             .Must(userId => Guid.TryParse(userId, out _))
             .WithMessage("We could not find a user with the provided id. Please verify the user id and try again.");
 
-        RuleFor(command => command.FirstName)
-            .Custom((firstName, context) =>
-            {
-                var result = FirstName.Create(firstName);
-                if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
-            });
+        RuleFor(command => command.FirstName).Custom((firstName, context) =>
+        {
+            var result = FirstName.Create(firstName);
+            if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
+        });
 
-        RuleFor(command => command.LastName)
-            .Custom((lastName, context) =>
-            {
-                var result = LastName.Create(lastName);
-                if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
-            });
+        RuleFor(command => command.LastName).Custom((lastName, context) =>
+        {
+            var result = LastName.Create(lastName);
+            if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
+        });
 
-        RuleFor(command => command.Email)
-            .Custom((email, context) =>
-            {
-                var result = Email.Create(email);
-                if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
-            });
+        RuleFor(command => command.Email).Custom((email, context) =>
+        {
+            var result = Email.Create(email);
+            if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
+        });
 
         RuleFor(command => command.PhoneCountryCode).Cascade(CascadeMode.Stop)
             .NotEmpty()
@@ -51,11 +48,10 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
                 });
             });
 
-        RuleFor(command => command.DisplayLanguage)
-            .Custom((displayLanguage, context) =>
-            {
-                var result = CultureCode.Create(displayLanguage);
-                if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
-            });
+        RuleFor(command => command.DisplayLanguage).Custom((displayLanguage, context) =>
+        {
+            var result = CultureCode.Create(displayLanguage);
+            if (result.IsFailed) result.Errors.ForEach(e => context.AddFailure(e.Message));
+        });
     }
 }
