@@ -12,7 +12,7 @@ public sealed class User : BaseEntity<Guid>
     {
     }
 
-    public User(Guid userId,FirstName firstName, LastName lastName, Email email, PhoneNumber phoneNumber,
+    public User(Guid userId, FirstName firstName, LastName lastName, Email email, PhoneNumber phoneNumber,
         CultureCode displayLanguage)
     {
         Id = userId;
@@ -79,6 +79,7 @@ public sealed class User : BaseEntity<Guid>
     {
         EntryInstructions = instructions;
     }
+
     public void SetUserLanguages(UserLanguageList userLanguageList)
     {
         // Remove user languages which are not part of the new list
@@ -100,7 +101,7 @@ public sealed class User : BaseEntity<Guid>
                          userSocialMediaUrl.SocialMediaUrl.Equals(newSocialMediaUrl))))
             _userSocialMediaUrls.Add(UserSocialMediaUrl.Create(newSocialMediaUrl).Value);
     }
-    
+
     public void SetUserSocialMediaUrls(UserSocialMediaUrlList userSocialMediaUrlList)
     {
         _userSocialMediaUrls.RemoveAll(userSocialMediaUrl =>

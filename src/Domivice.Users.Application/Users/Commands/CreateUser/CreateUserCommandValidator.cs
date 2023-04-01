@@ -11,7 +11,7 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
             .NotEmpty().WithMessage("A user id is required.")
             .NotNull().WithMessage("A user id is required.")
             .Must(userId => Guid.TryParse(userId, out _))
-            .WithMessage("We could not find a user with the provided id. Please verify the user id and try again.");
+            .WithMessage("The provided id is not a valid user id.");
 
         RuleFor(command => command.FirstName).Custom((firstName, context) =>
         {

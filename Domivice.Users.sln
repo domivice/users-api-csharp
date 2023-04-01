@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Application", "src\Domivice.Users.Application\Domivice.Users.Application.csproj", "{2F3CF2BD-F638-4424-A62E-10C03E2F004B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Web.Tests", "tests\Domivice.Users.Web.Tests\Domivice.Users.Web.Tests.csproj", "{4E2911FF-4425-4684-A05F-D76487D33F12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domivice.Users.Tests", "tests\Domivice.Users.Tests\Domivice.Users.Tests.csproj", "{4E2911FF-4425-4684-A05F-D76487D33F12}"
 EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution

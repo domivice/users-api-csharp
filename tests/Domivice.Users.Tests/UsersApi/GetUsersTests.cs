@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using User = Domivice.Users.Domain.Entities.User;
 
-namespace Domivice.Users.Web.Tests.UsersApi;
+namespace Domivice.Users.Tests.UsersApi;
 
 [Collection("TestCollection")]
 public class GetUsersTests

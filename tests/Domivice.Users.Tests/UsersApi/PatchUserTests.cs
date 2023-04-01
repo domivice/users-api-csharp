@@ -8,7 +8,7 @@ using Domivice.Domain.ValueObjects;
 using Domivice.Users.Application.Common.Interfaces;
 using Domivice.Users.Domain.ValueObjects;
 using Domivice.Users.Web.Models;
-using Domivice.Users.Web.Tests.Extensions;
+using Domivice.Users.Tests.Extensions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +19,7 @@ using UserEntity = Domivice.Users.Domain.Entities.User;
 using UserModel = Domivice.Users.Web.Models.User;
 
 
-namespace Domivice.Users.Web.Tests.UsersApi;
+namespace Domivice.Users.Tests.UsersApi;
 
 [Collection("TestCollection")]
 public class PatchUserTests

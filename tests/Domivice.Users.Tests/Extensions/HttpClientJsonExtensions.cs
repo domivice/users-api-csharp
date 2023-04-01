@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Domivice.Users.Web.Tests.Extensions;
+namespace Domivice.Users.Tests.Extensions;
 
 public static class HttpClientJsonExtensions
 {

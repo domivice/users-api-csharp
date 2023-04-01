@@ -1,6 +1,6 @@
 using System;
 
-namespace Domivice.Users.Web.Tests;
+namespace Domivice.Users.Tests;
 
 public static class NamesGenerator
 {

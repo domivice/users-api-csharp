@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Domivice.Users.Web.Tests;
+namespace Domivice.Users.Tests;
 
 [CollectionDefinition("TestCollection")]
 public class TestCollection : ICollectionFixture<TestServer>

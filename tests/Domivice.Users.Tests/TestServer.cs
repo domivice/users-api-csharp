@@ -1,4 +1,5 @@
 using Domivice.Users.Infrastructure.Persistence;
+using Domivice.Users.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using Respawn.Graph;
 
-namespace Domivice.Users.Web.Tests;
+namespace Domivice.Users.Tests;
 
 public class TestServer : WebApplicationFactory<Startup>
 {

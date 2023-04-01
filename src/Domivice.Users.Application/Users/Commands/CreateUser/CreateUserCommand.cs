@@ -39,6 +39,17 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
             nameof(CreateUserCommandHandler),
             JsonSerializer.Serialize(request)
         );
+
+        var existingUser = await _unitOfWork.UserRepository.GetByIdAsync(Guid.Parse(request.UserId), cancellationToken);
+
+        if (existingUser is {})
+        {
+            return Result.Fail(new ConflictError
+            {
+                Title = "Error inserting user",
+                Message = $"User with id {request.UserId} already exists"
+            });
+        }
         
         var user = new User(
             Guid.Parse(request.UserId),
@@ -50,6 +61,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         );
         
         _unitOfWork.UserRepository.Insert(user);
+        
         var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         if (saveResult == 0)

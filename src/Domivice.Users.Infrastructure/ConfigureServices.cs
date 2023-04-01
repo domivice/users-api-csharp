@@ -1,5 +1,7 @@
 using System.Reflection;
 using Domivice.Users.Application.Common.Interfaces;
+using Domivice.Users.Infrastructure.Consumers;
+using Domivice.Users.Infrastructure.Consumers.Exceptions;
 using Domivice.Users.Infrastructure.Persistence;
 using Domivice.Users.Infrastructure.Persistence.Interceptors;
 using Domivice.Users.Infrastructure.Services;
@@ -27,8 +29,21 @@ public static class ConfigureServices
         services.AddMassTransit(x =>
         {
             x.AddConsumers(Assembly.GetExecutingAssembly());
-            x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration.GetValue<string>("RabbitMq:Host"));
+                cfg.ReceiveEndpoint(configuration.GetValue<string>("RabbitMq:NewUserIdentitiesQueue"), c =>
+                {
+                    c.ConfigureConsumer<UserIdentityCreatedConsumer>(context);
+                    c.UseMessageRetry(r =>
+                    {
+                        r.Ignore(typeof(ValidationException),typeof(CreateUserCommandException));
+                        r.Immediate(5);
+                    });
+                });
+            });
         });
+       
         services.AddTransient<IMessageBus, MassTransitMessageBus>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddTransient(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));

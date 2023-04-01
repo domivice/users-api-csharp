@@ -11,7 +11,7 @@ using Xunit;
 using UserEntity = Domivice.Users.Domain.Entities.User;
 using UserModel = Domivice.Users.Web.Models.User;
 
-namespace Domivice.Users.Web.Tests.UsersApi;
+namespace Domivice.Users.Tests.UsersApi;
 
 [Collection("TestCollection")]
 public class GetUserTests
