@@ -24,8 +24,7 @@ public class GetUsersTests
 
     public GetUsersTests(TestServer server)
     {
-        _httpClient = server.CreateClient();
-        _httpClient.BaseAddress = new Uri("https://localhost:5005/");
+        _httpClient = server.CreateAuthenticatedClient();
 
         var scope = server.GetServiceScope();
         _testUsers = BuildUserEntities(50);
