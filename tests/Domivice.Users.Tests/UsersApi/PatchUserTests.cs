@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Domivice.Domain.ValueObjects;
 using Domivice.Users.Application.Common.Interfaces;
 using Domivice.Users.Domain.ValueObjects;
 using Domivice.Users.Web.Models;
 using Domivice.Users.Tests.Extensions;
+using Domivice.Users.Web.Constants;
 using FluentAssertions;
+using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -24,15 +27,18 @@ namespace Domivice.Users.Tests.UsersApi;
 [Collection("TestCollection")]
 public class PatchUserTests
 {
-    private readonly HttpClient _httpClient;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly TestServer _testServer;
+    private readonly UserEntity _defaultTestUser;
 
     public PatchUserTests(TestServer server)
     {
-        _httpClient = server.CreateAuthenticatedClient();
-
+        _testServer = server;
         var scope = server.GetServiceScope();
         _unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        _defaultTestUser = BuildUserEntity();
+        _unitOfWork.UserRepository.Insert(_defaultTestUser);
+        _unitOfWork.SaveChangesAsync().GetAwaiter().GetResult();
     }
 
     private static string GetEndpoint(string userId)
@@ -40,12 +46,58 @@ public class PatchUserTests
         return $"/v1/users/{userId}";
     }
 
-    [Fact]
-    public async Task Should_Return_Not_Found_When_User_Not_Found()
+    [Theory]
+    [InlineData("cd39ac3a-cb1c-41e2-94a8-8b2868099b57")]
+    [InlineData("!nvalid u$er !d")]
+    public async Task Should_Return_Not_Found_When_User_Not_Found(string userId)
     {
         var userUpdate = BuildUserUpdateModel();
-        var response = await _httpClient.PatchAsJsonAsync(GetEndpoint(Guid.NewGuid().ToString()), userUpdate);
+        var response = await _testServer.CreateAuthenticatedClient()
+            .PatchAsJsonAsync(GetEndpoint(userId), userUpdate);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Should_Return_UnAuthorized_When_User_Not_Authenticated()
+    {
+        var userUpdate = BuildUserUpdateModel();
+        var response = await _testServer.CreateUnAuthenticatedClient()
+            .PatchAsJsonAsync(GetEndpoint(Guid.NewGuid().ToString()), userUpdate);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task Should_Return_Forbidden_When_User_Does_Not_Have_The_Required_Permissions()
+    {
+        var userEntity = BuildUserEntity();
+        _unitOfWork.UserRepository.Insert(userEntity);
+        await _unitOfWork.SaveChangesAsync();
+        userEntity.Id.Should().NotBe(default(Guid));
+
+        var userUpdate = BuildUserUpdateModel();
+        var response = await _testServer.CreateAuthenticatedClient(new[]
+        {
+            new Claim(JwtClaimTypes.Subject, Guid.NewGuid().ToString())
+        }).PatchAsJsonAsync(GetEndpoint(userEntity.Id.ToString()), userUpdate);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+    
+    [Fact]
+    public async Task Should_Return_Success_When_User_Is_Admin()
+    {
+        var userEntity = BuildUserEntity();
+        _unitOfWork.UserRepository.Insert(userEntity);
+        await _unitOfWork.SaveChangesAsync();
+        userEntity.Id.Should().NotBe(default(Guid));
+        
+        var userUpdate = BuildUserUpdateModel();
+        var response = await _testServer.CreateAuthenticatedClient(new[]
+        {
+            new Claim(JwtClaimTypes.Subject, Guid.NewGuid().ToString()),
+            new Claim(JwtClaimTypes.Role, UserRoles.AppAdmin)
+        }).PatchAsJsonAsync(GetEndpoint(userEntity.Id.ToString()), userUpdate);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -57,7 +109,10 @@ public class PatchUserTests
         userEntity.Id.Should().NotBe(default(Guid));
 
         var userUpdate = BuildUserUpdateModel();
-        var response = await _httpClient.PatchAsJsonAsync(GetEndpoint(userEntity.Id.ToString()), userUpdate);
+        var response = await _testServer.CreateAuthenticatedClient(new[]
+        {
+            new Claim(JwtClaimTypes.Subject, userEntity.Id.ToString())
+        }).PatchAsJsonAsync(GetEndpoint(userEntity.Id.ToString()), userUpdate);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var user = await response.Content.ReadFromJsonAsync<UserModel>();
@@ -66,56 +121,50 @@ public class PatchUserTests
         user?.SocialMediaUrls.Should().NotBeNull();
     }
 
-    public static TheoryData<UserUpdate, string, string> InvalidUserUpdateData => new()
+    public static TheoryData<UserUpdate, string> InvalidUserUpdateData => new()
     {
-        {BuildUserUpdateModel(), "!nvalid u$er !d", "userId"},
-        {BuildUserUpdateModel("!nvalid first n@me"), Guid.NewGuid().ToString(), "firstName"},
-        {BuildUserUpdateModel(lastName: "!nvalid last n@me"), Guid.NewGuid().ToString(), "lastName"},
-        {BuildUserUpdateModel(phoneNumber: "!nvalid ph0ne number"), Guid.NewGuid().ToString(), "phoneNumber"},
-        {BuildUserUpdateModel(phoneCountryCode: "!nvalid c0untry c0de"), Guid.NewGuid().ToString(), "phoneCountryCode"},
-        {BuildUserUpdateModel(displayLanguage: "!nvalid language c0de"), Guid.NewGuid().ToString(), "displayLanguage"},
-        {BuildUserUpdateModel(webSite: "!nvalid url"), Guid.NewGuid().ToString(), "website"},
+        {BuildUserUpdateModel("!nvalid first n@me"), "firstName"},
+        {BuildUserUpdateModel(lastName: "!nvalid last n@me"), "lastName"},
+        {BuildUserUpdateModel(phoneNumber: "!nvalid ph0ne number"), "phoneNumber"},
+        {BuildUserUpdateModel(phoneCountryCode: "!nvalid c0untry c0de"), "phoneCountryCode"},
+        {BuildUserUpdateModel(displayLanguage: "!nvalid language c0de"), "displayLanguage"},
+        {BuildUserUpdateModel(webSite: "!nvalid url"), "website"},
         {
             BuildUserUpdateModel(languages: new List<string>
                 {LanguageCode.English, LanguageCode.Arabic, LanguageCode.Hebrew, LanguageCode.Afrikaans}),
-            Guid.NewGuid().ToString(), "languages"
+            "languages"
         },
         {
             BuildUserUpdateModel(languages: new List<string> {LanguageCode.English, LanguageCode.English}),
-            Guid.NewGuid().ToString(), "languages"
+            "languages"
         },
         {
-            BuildUserUpdateModel(languages: new List<string> {"!nvalid language code"}), Guid.NewGuid().ToString(),
+            BuildUserUpdateModel(languages: new List<string> {"!nvalid language code"}),
             "languages[0]"
         },
         {
             BuildUserUpdateModel(socialMediaUrls: new List<SocialMediaUrl>
                 {new() {Site = "!nvalid site", Url = "!nvalid url"}}),
-            Guid.NewGuid().ToString(),
             "socialMediaUrls[0]"
         },
         {
             BuildUserUpdateModel(socialMediaUrls: new List<SocialMediaUrl>
                 {new() {Site = SocialMediaSite.Facebook, Url = "https://twitter.com/nelsonkana"}}),
-            Guid.NewGuid().ToString(),
             "socialMediaUrls[0]"
         },
         {
             BuildUserUpdateModel(socialMediaUrls: new List<SocialMediaUrl>
                 {new() {Site = SocialMediaSite.Twitter, Url = "https://www.facebook.com/NocesDeKana"}}),
-            Guid.NewGuid().ToString(),
             "socialMediaUrls[0]"
         },
         {
             BuildUserUpdateModel(socialMediaUrls: new List<SocialMediaUrl>
                 {new() {Site = SocialMediaSite.YouTube, Url = "https://www.facebook.com/NocesDeKana"}}),
-            Guid.NewGuid().ToString(),
             "socialMediaUrls[0]"
         },
         {
             BuildUserUpdateModel(socialMediaUrls: new List<SocialMediaUrl>
                 {new() {Site = SocialMediaSite.Instagram, Url = "https://www.facebook.com/NocesDeKana"}}),
-            Guid.NewGuid().ToString(),
             "socialMediaUrls[0]"
         },
         {
@@ -124,17 +173,18 @@ public class PatchUserTests
                 new() {Site = SocialMediaSite.Facebook, Url = "https://www.facebook.com/NocesDeKana"},
                 new() {Site = SocialMediaSite.Facebook, Url = "https://www.facebook.com/NocesDeKana"}
             }),
-            Guid.NewGuid().ToString(),
             "socialMediaUrls"
         }
     };
 
     [Theory]
     [MemberData(nameof(InvalidUserUpdateData))]
-    public async Task Should_Return_Validation_Errors(UserUpdate userUpdate, string userId,
-        string errorField)
+    public async Task Should_Return_Validation_Errors(UserUpdate userUpdate, string errorField)
     {
-        var response = await _httpClient.PatchAsJsonAsync(GetEndpoint(userId), userUpdate);
+        var response = await _testServer.CreateAuthenticatedClient(new[]
+        {
+            new Claim(JwtClaimTypes.Subject, _defaultTestUser.Id.ToString())
+        }).PatchAsJsonAsync(GetEndpoint(_defaultTestUser.Id.ToString()), userUpdate);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var problemResult = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
         problemResult?.Errors.Should().ContainKey(errorField);

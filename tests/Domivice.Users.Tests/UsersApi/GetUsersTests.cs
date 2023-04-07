@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Domivice.Domain.ValueObjects;
 using Domivice.Users.Infrastructure.Persistence;
+using Domivice.Users.Web.Constants;
 using Domivice.Users.Web.Models;
 using FluentAssertions;
+using IdentityModel;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -19,13 +21,12 @@ namespace Domivice.Users.Tests.UsersApi;
 [Collection("TestCollection")]
 public class GetUsersTests
 {
-    private readonly HttpClient _httpClient;
     private readonly List<User> _testUsers;
+    private readonly TestServer _testServer;
 
     public GetUsersTests(TestServer server)
     {
-        _httpClient = server.CreateAuthenticatedClient();
-
+        _testServer = server;
         var scope = server.GetServiceScope();
         _testUsers = BuildUserEntities(50);
         var dbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
@@ -37,11 +38,31 @@ public class GetUsersTests
     {
         return "/v1/users";
     }
+    
+    [Fact]
+    public async Task Should_Return_Forbidden_When_User_Does_Not_Have_The_Required_Permissions()
+    {
+        var response = await _testServer
+            .CreateAuthenticatedClient()
+            .GetAsync(GetEndpoint());
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+    
+    [Fact]
+    public async Task Should_Return_UnAuthorized_When_User_Not_Authenticated()
+    {
+        var response = await _testServer
+            .CreateUnAuthenticatedClient()
+            .GetAsync(GetEndpoint());
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
 
     [Fact]
     public async Task Should_Return_UserList_Success()
     {
-        var response = await _httpClient.GetAsync(GetEndpoint());
+        var response = await _testServer
+            .CreateAuthenticatedClient(new[] {new Claim(JwtClaimTypes.Role, UserRoles.AppAdmin)})
+            .GetAsync(GetEndpoint());
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var userList = await response.Content.ReadFromJsonAsync<UserList>();
         userList?.PreviousPage.Should().BeNull();
@@ -58,7 +79,9 @@ public class GetUsersTests
         var firstUser = _testUsers.First();
         var searchTerm = firstUser.GetType().GetProperty(searchFieldName)?.GetValue(firstUser)?.ToString();
         var queryString = new Dictionary<string, string> {{"search", searchTerm!}};
-        var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString(GetEndpoint(), queryString!));
+        var response = await _testServer
+            .CreateAuthenticatedClient(new[] {new Claim(JwtClaimTypes.Role, UserRoles.AppAdmin)})
+            .GetAsync(QueryHelpers.AddQueryString(GetEndpoint(), queryString!));
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var userList = await response.Content.ReadFromJsonAsync<UserList>();
         userList?.Data.Should().OnlyContain(user =>
@@ -73,7 +96,9 @@ public class GetUsersTests
     {
         const string searchTerm = "438";
         var queryString = new Dictionary<string, string> {{"search", searchTerm}};
-        var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString(GetEndpoint(), queryString!));
+        var response = await _testServer
+            .CreateAuthenticatedClient(new[] {new Claim(JwtClaimTypes.Role, UserRoles.AppAdmin)})
+            .GetAsync(QueryHelpers.AddQueryString(GetEndpoint(), queryString!));
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var userList = await response.Content.ReadFromJsonAsync<UserList>();
         userList?.Data.Should().OnlyContain(user => user.PhoneNumber.Contains(searchTerm));
@@ -95,7 +120,9 @@ public class GetUsersTests
     [MemberData(nameof(SortTheoryData))]
     public async Task Should_Return_Sorted_UserList(Dictionary<string, string> queryString, string sortFieldName)
     {
-        var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString(GetEndpoint(), queryString!));
+        var response = await _testServer
+            .CreateAuthenticatedClient(new[] {new Claim(JwtClaimTypes.Role, UserRoles.AppAdmin)})
+            .GetAsync(QueryHelpers.AddQueryString(GetEndpoint(), queryString!));
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var userList = await response.Content.ReadFromJsonAsync<UserList>();
         var sortedUsesListData = queryString["sort"].Contains("desc")

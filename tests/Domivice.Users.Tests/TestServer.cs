@@ -39,6 +39,14 @@ public class TestServer : WebApplicationFactory<Startup>
 
         return client;
     }
+    
+    public HttpClient CreateUnAuthenticatedClient()
+    {
+        var client = CreateClient();
+        client.BaseAddress = new Uri(BaseAddress);
+
+        return client;
+    }
 
     private IConfiguration Configuration { get; }
 
@@ -47,7 +55,6 @@ public class TestServer : WebApplicationFactory<Startup>
         builder.ConfigureAppConfiguration(config => { config.AddConfiguration(Configuration); });
         builder.ConfigureTestServices(services =>
         {
-
             services.PostConfigure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.ConfigurationManager = null;

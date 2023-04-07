@@ -9,7 +9,6 @@
  */
 
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using Domivice.PagingSorting.Web.Models;
 using Domivice.Users.Application.Users.Commands.DeleteUser;
@@ -17,10 +16,12 @@ using Domivice.Users.Application.Users.Queries.GetUser;
 using Domivice.Users.Application.Users.Queries.GetUsers;
 using Domivice.Users.Application.Users.ReadModels;
 using Domivice.Users.Web.Attributes;
+using Domivice.Users.Web.Constants;
 using Domivice.Users.Web.Extensions;
 using Domivice.Users.Web.Models;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Error = Domivice.Users.Web.Models.Error;
@@ -50,6 +51,7 @@ public class UsersApiController : DomiviceControllerBase
     /// <response code="401">User is not authenticated</response>
     [HttpGet]
     [Route("/v1/users")]
+    [Authorize(Roles = nameof(UserRoles.AppAdmin))]
     [ValidateModelState]
     [SwaggerOperation("V1UsersGet")]
     [SwaggerResponse(200, type: typeof(UserList), description: "When a list of 0 or more users are returned")]
@@ -77,6 +79,7 @@ public class UsersApiController : DomiviceControllerBase
     /// <response code="404">The resource was not found</response>
     [HttpDelete]
     [Route("/v1/users/{userId}")]
+    [AuthorizeUser]
     [ValidateModelState]
     [SwaggerOperation("V1UsersUserIdDelete")]
     [SwaggerResponse(401, type: typeof(Error), description: "User is not authenticated")]
@@ -98,6 +101,7 @@ public class UsersApiController : DomiviceControllerBase
     /// <response code="404">The resource was not found</response>
     [HttpGet]
     [Route("/v1/users/{userId}")]
+    [AuthorizeUser]
     [ValidateModelState]
     [SwaggerOperation("V1UsersUserIdGet")]
     [SwaggerResponse(200, type: typeof(User), description: "Response when a user object is returned")]
@@ -122,6 +126,7 @@ public class UsersApiController : DomiviceControllerBase
     /// <response code="404">The resource was not found</response>
     [HttpPatch]
     [Route("/v1/users/{userId}")]
+    [AuthorizeUser]
     [Consumes("application/json")]
     [ValidateModelState]
     [SwaggerOperation("V1UsersUserIdPatch")]
