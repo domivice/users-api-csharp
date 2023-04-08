@@ -2,7 +2,6 @@ using System;
 using System.Security.Claims;
 using Domivice.Users.Application.Users.Queries.GetUser;
 using Domivice.Users.Web.Constants;
-using IdentityModel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

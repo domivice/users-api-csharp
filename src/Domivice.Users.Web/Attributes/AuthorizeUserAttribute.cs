@@ -1,4 +1,3 @@
-using System;
 using Domivice.Users.Web.Filters.AuthorizationFilters;
 using Microsoft.AspNetCore.Mvc;
 
