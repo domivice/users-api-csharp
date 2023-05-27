@@ -5,6 +5,11 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
 WORKDIR /app
 EXPOSE 5005
 
+#Install Domivice CA
+RUN apt-get install -y ca-certificates
+COPY src/Domivice.Users.Web/Certs/domivice.CA.pem /usr/local/share/ca-certificates/domivice.CA.crt
+RUN update-ca-certificates
+
 # Build container
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 ARG PACKAGE_SOURCE_USERNAME
@@ -16,14 +21,14 @@ COPY src/Domivice.Users.Application/*.csproj ./src/Domivice.Users.Application/
 COPY src/Domivice.Users.Domain/*.csproj ./src/Domivice.Users.Domain/
 COPY src/Domivice.Users.Infrastructure/*.csproj ./src/Domivice.Users.Infrastructure/
 COPY src/Domivice.Users.Web/*.csproj ./src/Domivice.Users.Web/
-COPY tests/Domivice.Users.Web.Tests/*.csproj ./tests/Domivice.Users.Web.Tests/
+COPY tests/Domivice.Users.Tests/*.csproj ./tests/Domivice.Users.Tests/
 
 # NuGet restore
 RUN dotnet nuget add source https://pkgs.dev.azure.com/domivice/Domivice/_packaging/DomiviceNugets/nuget/v3/index.json -u $PACKAGE_SOURCE_USERNAME -p $PACKAGE_SOURCE_PASSWORD --store-password-in-clear-text
 RUN dotnet restore
 
 COPY src/Domivice.Users.Web/. ./src/Domivice.Users.Web/
-COPY tests/Domivice.Users.Web.Tests/. ./src/Domivice.Users.Web.Tests/
+COPY tests/Domivice.Users.Tests/. ./src/Domivice.Users.Tests/
 COPY src/Domivice.Users.Application/. ./src/Domivice.Users.Application/
 COPY src/Domivice.Users.Domain/. ./src/Domivice.Users.Domain/
 COPY src/Domivice.Users.Infrastructure/. ./src/Domivice.Users.Infrastructure/

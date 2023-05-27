@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prometheus;
+using Serilog;
 
 namespace Domivice.Users.Web;
 
@@ -60,7 +62,7 @@ public class Startup
         else
             app.UseHsts();
 
-        app.UseHttpsRedirection();
+        app.UseSerilogRequestLogging();
         app.UseDefaultFiles();
         app.UseStaticFiles();
         app.UseSwagger(c => { c.RouteTemplate = "openapi/{documentName}/openapi.json"; })
@@ -77,6 +79,8 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseMetricServer();
+        app.UseHttpMetrics();
         app.UseEndpoints(endpoints => { endpoints.MapControllers().RequireAuthorization(); });
     }
 }
