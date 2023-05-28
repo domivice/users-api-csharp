@@ -30,6 +30,7 @@ public static class ConfigureServices
                 options.Audience = configuration.GetValue<string>("IdentityServer:Audience");
                 options.TokenValidationParameters.ValidateAudience = false;
                 options.TokenValidationParameters.ValidTypes = new[] {"at+jwt"};
+                options.TokenValidationParameters.ValidIssuers = configuration.GetSection("IdentityServer:ValidIssuers").Get<string[]>();
             });
 
         services.AddSwagger();

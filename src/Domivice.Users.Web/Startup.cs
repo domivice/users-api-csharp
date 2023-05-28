@@ -65,13 +65,13 @@ public class Startup
         app.UseSerilogRequestLogging();
         app.UseDefaultFiles();
         app.UseStaticFiles();
-        app.UseSwagger(c => { c.RouteTemplate = "openapi/{documentName}/openapi.json"; })
+        app.UseSwagger(c => { c.RouteTemplate = "openapi/users/{documentName}/openapi.json"; })
             .UseSwaggerUI(c =>
             {
-                // set route prefix to openapi, e.g. http://localhost:8080/openapi/index.html
-                c.RoutePrefix = "openapi";
+                // set route prefix to openapi, e.g. http://localhost:8080/openapi/users/index.html
+                c.RoutePrefix = "openapi/users";
                 //TODO: Either use the SwaggerGen generated OpenAPI contract (generated from C# classes)
-                c.SwaggerEndpoint("/openapi/1.0.0/openapi.json", "Users API");
+                c.SwaggerEndpoint("/openapi/users/1.0.0/openapi.json", "Users API");
 
                 //TODO: Or alternatively use the original OpenAPI contract that's included in the static files
                 // c.SwaggerEndpoint("/openapi-original.json", "Users API Original");
